@@ -15,11 +15,9 @@
 
 ### Prerequisites
 
-The get tweets application has been written in Python 3.
-
-The get tweets application requires an Azure Storage Queue and a Twitter application. The Azure Storage Queue can be configured using the instruction  found on [docs.microsoft.com](https://docs.microsoft.com/en-us/azure/storage/storage-python-how-to-use-queue-storage).
-
-This Twitter application can be configured on the [Twitter development center](https://dev.twitter.com/#).
+- Python 3
+- [Azure Storage Queue](https://docs.microsoft.com/en-us/azure/storage/storage-python-how-to-use-queue-storage)
+- [Twitter application](https://dev.twitter.com/#)
 
 ### Environment variables
 
@@ -41,8 +39,6 @@ export TWITTER_TEXT=seattle
 
 The `get-tweet.py` files is found at `.twitter-sentiment-cosmosdb/get-tweet/get-tweet.py`.
 
-Run the following to begin catching tweets and storing them in an Azure Queue.
-
 ```
 python get-tweet.py
 ```
@@ -51,13 +47,10 @@ python get-tweet.py
 
 ### Prerequisites
 
-The process tweets application has been written in Python 3.
-
-The process tweets application requires an Azure Storage Queue and a Twitter application. The Azure Storage Queue can be configured using the instruction  found on [docs.microsoft.com](https://docs.microsoft.com/en-us/azure/storage/storage-python-how-to-use-queue-storage).
-
-You will also need access to an Azure Analytics Text Sentiment API. For information on creating one, see [Text Analytics API on docs.microsoft.com](https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/quick-start).
-
-Finally, you will need a Cosmos DB. For information see, [Cosmos DB on docs.microsoft.com](https://docs.microsoft.com/en-us/azure/cosmos-db/introduction).
+- Python 3
+- [Azure Storage Queue](https://docs.microsoft.com/en-us/azure/storage/storage-python-how-to-use-queue-storage)
+- [Azure Analytics text sentiment API](https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/quick-start)
+- [Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/introduction)
 
 ### Environment variables
 
@@ -82,10 +75,6 @@ export COSMOS_DB_COLLECTION=tweet-sentiment
 
 The `process-tweet.py` files is found at `.twitter-sentiment-cosmosdb/process-tweet/process-tweet.py`.
 
-Run the following to begin processing tweets from the Azure Queue. 
-
 ```
 python process-tweet.py
 ```
-
-Each one will be evaluated against the Azure Analytics Text Sentiment API. The tweet and Sentiment score will then be stored in an Azure Cosmos DB.
