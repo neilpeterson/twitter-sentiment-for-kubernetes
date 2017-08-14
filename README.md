@@ -23,8 +23,6 @@ This Twitter application can be configured on the [Twitter development center](h
 
 ### Environment variables
 
-The following environment variables are required. The first set configures a connection to an Azure Queue. The second set configures the Twitter REST / API connection.
-
 ```
 # Azure Storage
 export AZURE_STORAGE_ACCT=kubeazurequeue
@@ -63,22 +61,22 @@ Finally, you will need a Cosmos DB. For information see, [Cosmos DB on docs.micr
 
 ### Environment variables
 
-The following environment variables are required. The first set configures a connection to an Azure Queue. The second set configures the Twitter REST / API connection.
+```
+# Azure Storage
+export AZURE_STORAGE_ACCT=kubeazurequeue
+export AZURE_QUEUE=kubeazurequeue
+export AZURE_QUEUE_KEY=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
 # Azure Analytics
 export AZURE_ANALYTICS_URI=https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment
 export AZURE_ANALYTICS_KEY=00000000000000000000000000000000
 
-# Azure Storage
-export AZURE_STORAGE_ACCT=kubeazurequeue
-export AZURE_QUEUE=kubeazurequeue 
-export AZURE_QUEUE_KEY=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-
 # Cosmos DB
 export COSMOS_DB_ENDPOINT=https://twitter-sentiment.documents.azure.com
 export COSMOS_DB_MASTERKEY=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-export COSMOS_DB_DATABASE=tweet-sentiment 
+export COSMOS_DB_DATABASE=tweet-sentiment
 export COSMOS_DB_COLLECTION=tweet-sentiment
+```
 
 ### Execution
 
