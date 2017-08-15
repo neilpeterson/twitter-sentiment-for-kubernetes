@@ -45,8 +45,9 @@ def analytics(text):
     ]
     }
 
+    # return json.loads(r.text)['documents'][0]['score']
     r = requests.post(AZURE_ANALYTICS_URI, data=json.dumps(payload), headers=headers)
-    return json.loads(r.text)['documents'][0]['score']
+    return json.loads(r.text)
 
 # Get Azure Queue count
 def queue_count():
