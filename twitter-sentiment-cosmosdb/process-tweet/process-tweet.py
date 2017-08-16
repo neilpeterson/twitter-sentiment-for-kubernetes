@@ -120,10 +120,10 @@ while True:
 
         # Get sentiment
         returned_sentiment = analytics(message.content)
-        print(returned_sentiment)
+        print((returned_sentiment)['documents'][0]['score'])
 
         # Add tweet and sentiment score to Cosmos DB
-        add_tweet_cosmosdb(message.content,returned_sentiment)
+        add_tweet_cosmosdb(message.content,returned_sentiment['documents'][0]['score'])
 
         # Delete message from queue
         delete_queue_message(AZURE_QUEUE,message.id, message.pop_receipt)

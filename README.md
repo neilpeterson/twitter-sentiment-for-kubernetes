@@ -11,6 +11,10 @@
 - Get sentiment of Tweet from Azure Analytics
 - Puts Tweet message and sentiment score into a Cosmos DB
 
+### Chart Tweets
+
+- Creates a pie chart with tweet sentiment results.
+
 ## Get Tweets
 
 ### Prerequisites
@@ -77,4 +81,31 @@ The `process-tweet.py` files is found at `.twitter-sentiment-cosmosdb/process-tw
 
 ```
 python process-tweet.py
+```
+
+## Chart Tweets
+
+Python Flask app that reads tweet sentiment from Cosmos DB and creates results pie chart.
+
+### Prerequisites
+
+- Python 3
+- [Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/introduction)
+
+### Environment variables
+
+```
+# Cosmos DB
+export COSMOS_DB_ENDPOINT=https://twitter-sentiment.documents.azure.com
+export COSMOS_DB_MASTERKEY=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+export COSMOS_DB_DATABASE=tweet-sentiment
+export COSMOS_DB_COLLECTION=tweet-sentiment
+```
+
+### Execution
+
+The `main.py` files is found at `.twitter-sentiment-cosmosdb/chart-tweet/main.py`.
+
+```
+python main.py
 ```

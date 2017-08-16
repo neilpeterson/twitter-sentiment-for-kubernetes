@@ -1,0 +1,106 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: process-tweet
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: process-tweet
+    spec:
+      containers:
+      - name: process-tweet
+        image: neilpeterson/process-tweet
+        env:
+        - name: AZURE_ANALYTICS_URI
+          value: https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment
+        - name: AZURE_ANALYTICS_KEY
+          value: 
+        - name: AZURE_STORAGE_ACCT
+          value: kubeazurequeue
+        - name: AZURE_QUEUE
+          value: kubeazurequeue
+        - name: AZURE_QUEUE_KEY
+          value: 
+        - name: COSMOS_DB_ENDPOINT
+          value: https://twitter-sentiment.documents.azure.com
+        - name: COSMOS_DB_MASTERKEY
+          value: 
+        - name:  COSMOS_DB_DATABASE
+          value: tweet-sentiment
+        - name:  COSMOS_DB_COLLECTION
+          value: tweet-sentiment
+        lifecycle:
+          preStop:
+              exec:
+                command: ["export","KILL_STOP=true"]
+      terminationGracePeriodSeconds: 0
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: get-tweet
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: get-tweet
+    spec:
+      containers:
+      - name: get-tweet
+        image: neilpeterson/get-tweet
+        env:
+        - name: AZURE_STORAGE_ACCT
+          value: kubeazurequeue  
+        - name: AZURE_QUEUE
+          value: kubeazurequeue  
+        - name: AZURE_QUEUE_KEY
+          value: 
+        - name: TWITTER_CONSUMER_KEY
+          value: 
+        - name: TWITTER_CONSUMER_SECRET
+          value: 
+        - name: TWITTER_ACCESS_TOKEN
+          value: 
+        - name: TWITTER_ACCESS_TOKEN_SECRET
+          value: 
+        - name: TWITTER_TEXT
+          value: bird
+      terminationGracePeriodSeconds: 0
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: chart-tweet
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: chart-tweet
+    spec:
+      containers:
+      - name: chart-tweet
+        image: neilpeterson/chart-tweet
+        env:
+        - name: COSMOS_DB_ENDPOINT
+          value: https://twitter-sentiment.documents.azure.com
+        - name: COSMOS_DB_MASTERKEY
+          value: 
+        - name:  COSMOS_DB_DATABASE
+          value: tweet-sentiment
+        - name:  COSMOS_DB_COLLECTION
+          value: tweet-sentiment
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chart-tweet
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: chart-tweet
