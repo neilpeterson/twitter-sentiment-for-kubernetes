@@ -16,10 +16,21 @@ db = next((data for data in client.ReadDatabases() if data['id'] == COSMOS_DB_DA
 coll = next((coll for coll in client.ReadCollections(db['_self']) if coll['id'] == COSMOS_DB_COLLECTION))
 docs = client.ReadDocuments(coll['_self'])
 
-i = 1
+
+positive = 0
+neutral = 0
+negative = 0
 
 for doc in docs:
-    print(doc['message'] + ' ====== Sentiment ' + str(doc['sentiment']))
-    i += 1
+    if doc['sentiment'] >= .75:
+        positive += 1
+    elif (doc['sentiment'] >=.5 and doc['sentiment'] < .75):
+        neutral += 1
+    elif doc['sentiment'] < .49:
+        negative +=1
     
-print(str(i))
+    #print(doc['message'] + ' ====== Sentiment ' + str(doc['sentiment']))
+
+print(positive)
+print(neutral)
+print(negative)

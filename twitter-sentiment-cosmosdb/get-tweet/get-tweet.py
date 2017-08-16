@@ -27,8 +27,11 @@ queue_service = QueueService(account_name=AZURE_STORAGE_ACCT, account_key=AZURE_
 class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
-        print(status.text)
-        queue_service.put_message(AZURE_QUEUE, status.text)
+        
+        # Filter out re-tweet
+        if (not status.retweeted) and ('RT @' not in status.text):
+            print(status.text)
+            queue_service.put_message(AZURE_QUEUE, status.text)
 
     def on_error(self, status):
         print('Error')
