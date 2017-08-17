@@ -45,9 +45,12 @@ def analytics(text):
     ]
     }
 
-    # return json.loads(r.text)['documents'][0]['score']
     r = requests.post(AZURE_ANALYTICS_URI, data=json.dumps(payload), headers=headers)
-    return json.loads(r.text)
+    
+    try:
+        return json.loads(r.text)['documents'][0]['score']
+    except:
+        print("Analytics error.")   
 
 # Get Azure Queue count
 def queue_count():
@@ -67,6 +70,7 @@ def cosmosdb():
     # Check for database
     try:
         db = next((data for data in client.ReadDatabases() if data['id'] == COSMOS_DB_DATABASE))
+    # Create if missing
     except:
         db = client.CreateDatabase({'id': COSMOS_DB_DATABASE})
 
@@ -74,6 +78,7 @@ def cosmosdb():
     # Check for collection
     try:
         collection = next((coll for coll in client.ReadCollections(db['_self']) if coll['id'] == COSMOS_DB_COLLECTION))
+    # Create if missing
     except:
         options = {
             'offerEnableRUPerMinuteThroughput': True,
@@ -120,10 +125,10 @@ while True:
 
         # Get sentiment
         returned_sentiment = analytics(message.content)
-        print((returned_sentiment)['documents'][0]['score'])
+        print(returned_sentiment)
 
         # Add tweet and sentiment score to Cosmos DB
-        add_tweet_cosmosdb(message.content,returned_sentiment['documents'][0]['score'])
+        add_tweet_cosmosdb(message.content,returned_sentiment)
 
         # Delete message from queue
         delete_queue_message(AZURE_QUEUE,message.id, message.pop_receipt)
