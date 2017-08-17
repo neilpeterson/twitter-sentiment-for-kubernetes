@@ -29,14 +29,15 @@ def index():
     negative = 0
 
     for doc in docs:
-        if doc['sentiment'] >= .67:
-            positive += 1
-        elif (doc['sentiment'] >=.34 and doc['sentiment'] < .66):
-            neutral += 1
-        elif doc['sentiment'] < .34:
-            negative +=1
+        if isinstance(doc['sentiment'], float):
+            if doc['sentiment'] >= .67:
+                positive += 1
+            elif (doc['sentiment'] >=.34 and doc['sentiment'] < .66):
+                neutral += 1
+            elif doc['sentiment'] < .34:
+                negative +=1
 
-    pie_chart = pygal.Pie(style=BlueStyle)
+    pie_chart = pygal.Pie(style=BlueStyle, print_values=True)
     pie_chart.title = "Twitter Sentiment Results"
     pie_chart.add('Positive',positive)
     pie_chart.add('Neutral',neutral)
