@@ -34,7 +34,7 @@ spec:
         lifecycle:
           preStop:
               exec:
-                command: ["export","KILL_STOP=true"]
+                command: ["bin/sh","-c","export KILL_SWITCH=true"]
       terminationGracePeriodSeconds: 0
 ---
 apiVersion: apps/v1beta1
