@@ -28,8 +28,12 @@ class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         
-        # Filter out re-tweet
-        if (not status.retweeted) and ('RT @' not in status.text):
+        # Filter out re-tweet is env variable is set
+        if "FILTER_RETWEET" in os.environ:        
+            if (not status.retweeted) and ('RT @' not in status.text):
+                print(status.text)
+                queue_service.put_message(AZURE_QUEUE, status.text)
+        else:
             print(status.text)
             queue_service.put_message(AZURE_QUEUE, status.text)
 

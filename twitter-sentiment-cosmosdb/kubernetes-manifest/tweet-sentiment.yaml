@@ -16,17 +16,17 @@ spec:
         - name: AZURE_ANALYTICS_URI
           value: https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment
         - name: AZURE_ANALYTICS_KEY
-          value: 
+          value: <replace>
         - name: AZURE_STORAGE_ACCT
           value: kubeazurequeue
         - name: AZURE_QUEUE
           value: kubeazurequeue
         - name: AZURE_QUEUE_KEY
-          value: 
+          value: <replace>
         - name: COSMOS_DB_ENDPOINT
           value: https://twitter-sentiment.documents.azure.com
         - name: COSMOS_DB_MASTERKEY
-          value: 
+          value: <replace>
         - name:  COSMOS_DB_DATABASE
           value: tweet-sentiment
         - name:  COSMOS_DB_COLLECTION
@@ -57,15 +57,15 @@ spec:
         - name: AZURE_QUEUE
           value: kubeazurequeue  
         - name: AZURE_QUEUE_KEY
-          value: 
+          value: <replace>
         - name: TWITTER_CONSUMER_KEY
-          value: 
+          value: <replace>
         - name: TWITTER_CONSUMER_SECRET
-          value: 
+          value: <replace>
         - name: TWITTER_ACCESS_TOKEN
-          value: 
+          value: <replace>
         - name: TWITTER_ACCESS_TOKEN_SECRET
-          value: 
+          value: <replace>
         - name: TWITTER_TEXT
           value: bird
       terminationGracePeriodSeconds: 0
