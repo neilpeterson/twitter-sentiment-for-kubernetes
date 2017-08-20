@@ -28,6 +28,7 @@ class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         
+        # Filter out re-tweet is env variable is set
         if "FILTER_RETWEET" in os.environ:        
             if (not status.retweeted) and ('RT @' not in status.text):
                 print(status.text)

@@ -29,7 +29,7 @@ for doc in docs:
     elif doc['sentiment'] < .49:
         negative +=1
     
-    #print(doc['message'] + ' ====== Sentiment ' + str(doc['sentiment']))
+    print(doc['message'] + ' ====== Sentiment ' + str(doc['sentiment']))
 
 print(positive)
 print(neutral)
