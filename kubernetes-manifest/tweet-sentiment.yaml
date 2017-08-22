@@ -13,16 +13,19 @@ spec:
       - name: process-tweet
         image: neilpeterson/process-tweet
         env:
+        # Azure Analytics
         - name: AZURE_ANALYTICS_URI
           value: https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment
         - name: AZURE_ANALYTICS_KEY
           value: <replace>
+        # Azure Storage
         - name: AZURE_STORAGE_ACCT
           value: kubeazurequeue
         - name: AZURE_QUEUE
           value: kubeazurequeue
         - name: AZURE_QUEUE_KEY
           value: <replace>
+        # Cosmos DB
         - name: COSMOS_DB_ENDPOINT
           value: https://twitter-sentiment.documents.azure.com
         - name: COSMOS_DB_MASTERKEY
@@ -52,12 +55,14 @@ spec:
       - name: get-tweet
         image: neilpeterson/get-tweet
         env:
+        # Azure Storage
         - name: AZURE_STORAGE_ACCT
           value: kubeazurequeue  
         - name: AZURE_QUEUE
           value: kubeazurequeue  
         - name: AZURE_QUEUE_KEY
           value: <replace>
+        # Twitter
         - name: TWITTER_CONSUMER_KEY
           value: <replace>
         - name: TWITTER_CONSUMER_SECRET
@@ -66,6 +71,7 @@ spec:
           value: <replace>
         - name: TWITTER_ACCESS_TOKEN_SECRET
           value: <replace>
+        # Tweet filter
         - name: TWITTER_TEXT
-          value: bird
+          value: dog
       terminationGracePeriodSeconds: 0
