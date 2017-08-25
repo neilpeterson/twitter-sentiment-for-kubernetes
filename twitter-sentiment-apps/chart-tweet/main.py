@@ -11,6 +11,15 @@ COSMOS_DB_MASTERKEY = os.environ['COSMOS_DB_MASTERKEY']
 COSMOS_DB_DATABASE = os.environ['COSMOS_DB_DATABASE']
 COSMOS_DB_COLLECTION = os.environ['COSMOS_DB_COLLECTION']
 
+# Chart label - static for now, will update to somethign dynamic
+CHART_LABEL = os.environ['CHART_LABEL']
+
+# Set chart title
+if "CHART_LABEL" in os.environ:
+    chart_title = "Tweets about " + CHART_LABEL
+else:
+    chart_title = "Tweet Sentiment"
+
 # Initialize the Python DocumentDB client
 client = document_client.DocumentClient(COSMOS_DB_ENDPOINT, {'masterKey': COSMOS_DB_MASTERKEY})
 
@@ -38,7 +47,7 @@ def index():
                 negative +=1
 
     pie_chart = pygal.Pie(style=BlueStyle, print_values=True)
-    pie_chart.title = "Twitter Sentiment Results"
+    pie_chart.title = chart_title
     pie_chart.add('Positive',positive)
     pie_chart.add('Neutral',neutral)
     pie_chart.add('Negitive', negative)    
