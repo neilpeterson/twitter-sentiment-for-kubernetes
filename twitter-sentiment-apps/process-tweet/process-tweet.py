@@ -46,7 +46,6 @@ def analytics(text):
     }
 
     r = requests.post(AZURE_ANALYTICS_URI, data=json.dumps(payload), headers=headers)
-    print(r.text)
     
     try:
         return json.loads(r.text)['documents'][0]['score']
