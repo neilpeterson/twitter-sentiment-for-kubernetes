@@ -1,14 +1,14 @@
 # Twitter API Endpoint and Credentials - this is not automated so must be specified.
-TWITTER_CONSUMER_KEY=replace
-TWITTER_CONSUMER_SECRET=replace
-TWITTER_ACCESS_TOKEN=replace
-TWITTER_ACCESS_TOKEN_SECRET=replace
+TWITTER_CONSUMER_KEY=ROgy0lRckDNDXfRtkYYefr7TT
+TWITTER_CONSUMER_SECRET=iLT0fQV0vw3orRbDGqCwXj2aHJoygOr0Yxw7XrBBJOEf81lyLv
+TWITTER_ACCESS_TOKEN=556115100-IYoAeEAVj2oFqKeLA3QmQyLs8VPft9AC8NS4TV0Q
+TWITTER_ACCESS_TOKEN_SECRET=ohAOB5kDgXJ6sIfEt3UyWnpUq6y9VbRcGQU4OOiPnGAIP
 
-# Twitter search term.
-TWITTER_TEXT=azure
+# Twitter search term - used to filter returned tweets.
+TWITTER_TEXT=Seattle
 
-# Azure Group, Storage account, and Cosmos DB name to be created.
-AZURE_RESOURCE_GROUP=myTwitterSentiment
+# Names for the Azure Resource Group, Storage Account, and Cosmos DB name.
+AZURE_RESOURCE_GROUP=mytwittersentiment
 AZURE_STORAGE_ACCT=mytwittersentiment
 AZURE_COSMOS_DB=mytwittersentiment
 AZURE_ANALYTICS=mytwittersentiment
@@ -141,4 +141,75 @@ spec:
     app: chart-tweet
 EOF
 
+# Create YAML
+cat <<EOF > twitter-sentiment-auto-scale.yml
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: azurequeues.apex-sample.com
+spec:
+  group: apex-sample.com
+  version: v1
+  scope: Namespaced
+  names:
+    plural: azurequeues
+    singular: azurequeue
+    kind: AzureQueue
+    shortNames:
+    - aq
+---
+apiVersion: "apex-sample.com/v1"
+kind: AzureQueue
+metadata:
+  name: process-tweet
+spec:
+  AZURESTORAGEACCT: $AZURE_STORAGE_ACCT
+  AZUREQUEUE: $AZURE_STORAGE_ACCT
+  AZUREQUEUEKEY: $AZURE_QUEUE_KEY
+  QUEUELENGTH: 10
+  MIN_REPLICA: 1
+  MAX_REPLICA: 3
+  DEPLOYMENTNAME: process-tweet
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: kube-azure-queue-controller
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kube-azure-queue-controller
+    spec:
+      containers:
+      - name: kubectl-sidecar
+        image: neilpeterson/kubectl-proxy-sidecar
+      - name: kube-azure-queue-controller
+        image: neilpeterson/azure-queue-controller
+EOF
 
+# Create environment variables
+cat <<EOF > twitter-sentiment-variables.sh
+# Azure Analytics
+export AZURE_ANALYTICS_URI=$AZURE_ANALYTICS_ENDPOINT
+export AZURE_ANALYTICS_KEY=$AZURE_ANALYTICS_KEY
+
+# Azure Storage
+export AZURE_STORAGE_ACCT=$AZURE_STORAGE_ACCT
+export AZURE_QUEUE=$AZURE_STORAGE_ACCT 
+export AZURE_QUEUE_KEY=$AZURE_QUEUE_KEY
+
+# Twitter
+export TWITTER_CONSUMER_KEY=$TWITTER_CONSUMER_KEY
+export TWITTER_CONSUMER_SECRET=$TWITTER_CONSUMER_SECRET
+export TWITTER_ACCESS_TOKEN=$TWITTER_ACCESS_TOKEN
+export TWITTER_ACCESS_TOKEN_SECRET=$TWITTER_ACCESS_TOKEN_SECRET
+export TWITTER_TEXT=TWITTER_TEXT
+
+# Cosmos DB
+export COSMOS_DB_ENDPOINT=$COSMOS_DB_ENDPOINT
+export COSMOS_DB_MASTERKEY=$COSMOS_DB_MASTERKEY
+export COSMOS_DB_DATABASE=$AZURE_COSMOS_DB
+export COSMOS_DB_COLLECTION=$AZURE_COSMOS_DB
+EOF
