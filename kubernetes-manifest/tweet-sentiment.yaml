@@ -15,25 +15,25 @@ spec:
         env:
         # Azure Analytics
         - name: AZURE_ANALYTICS_URI
-          value: https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment
+          value: 
         - name: AZURE_ANALYTICS_KEY
-          value: <replace>
+          value: 
         # Azure Storage
         - name: AZURE_STORAGE_ACCT
-          value: kubeazurequeue
+          value: 
         - name: AZURE_QUEUE
-          value: kubeazurequeue
+          value: 
         - name: AZURE_QUEUE_KEY
-          value: <replace>
+          value: 
         # Cosmos DB
         - name: COSMOS_DB_ENDPOINT
-          value: https://twitter-sentiment.documents.azure.com
+          value: 
         - name: COSMOS_DB_MASTERKEY
-          value: <replace>
+          value: 
         - name:  COSMOS_DB_DATABASE
-          value: tweet-sentiment
+          value: 
         - name:  COSMOS_DB_COLLECTION
-          value: tweet-sentiment
+          value: 
         lifecycle:
           preStop:
               exec:
@@ -57,20 +57,20 @@ spec:
         env:
         # Azure Storage
         - name: AZURE_STORAGE_ACCT
-          value: kubeazurequeue  
+          value: 
         - name: AZURE_QUEUE
-          value: kubeazurequeue  
+          value:  
         - name: AZURE_QUEUE_KEY
-          value: <replace>
+          value: 
         # Twitter
         - name: TWITTER_CONSUMER_KEY
-          value: <replace>
+          value: 
         - name: TWITTER_CONSUMER_SECRET
-          value: <replace>
+          value: 
         - name: TWITTER_ACCESS_TOKEN
-          value: <replace>
+          value: 
         - name: TWITTER_ACCESS_TOKEN_SECRET
-          value: <replace>
+          value: 
         # Tweet filter
         - name: TWITTER_TEXT
           value: dog

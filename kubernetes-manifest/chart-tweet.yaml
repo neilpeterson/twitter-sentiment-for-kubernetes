@@ -14,13 +14,15 @@ spec:
         image: neilpeterson/chart-tweet
         env:
         - name: COSMOS_DB_ENDPOINT
-          value: https://twitter-sentiment.documents.azure.com
+          value: 
         - name: COSMOS_DB_MASTERKEY
           value: 
         - name:  COSMOS_DB_DATABASE
-          value: tweet-sentiment
+          value: 
         - name:  COSMOS_DB_COLLECTION
-          value: tweet-sentiment
+          value: 
+        - name:  CHART_LABEL
+          value: 
 ---
 apiVersion: v1
 kind: Service

@@ -128,6 +128,8 @@ spec:
           value: $AZURE_COSMOS_DB
         - name:  COSMOS_DB_COLLECTION
           value: $AZURE_COSMOS_DB
+        - name:  CHART_LABEL
+          value: $TWITTER_TEXT
 ---
 apiVersion: v1
 kind: Service
