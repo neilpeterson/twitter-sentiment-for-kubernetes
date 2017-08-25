@@ -15,97 +15,85 @@
 
 - Creates a pie chart with tweet sentiment results.
 
-## Get Tweets
+# Quick Start:
 
-### Prerequisites
+## Prerequisites
 
-- Python 3
-- [Azure Storage Queue](https://docs.microsoft.com/en-us/azure/storage/storage-python-how-to-use-queue-storage)
-- [Twitter application](https://dev.twitter.com/#)
+### Kubernetes Cluster 
 
-### Environment variables
+You will need a Kubernetes cluster before running the Twitter Sentiment to Cosmos DB application. 
 
-```
-# Azure Storage
-export AZURE_STORAGE_ACCT=kubeazurequeue
-export AZURE_QUEUE=kubeazurequeue 
-export AZURE_QUEUE_KEY=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+To create a Kubernetes cluster in Azure Container Service, see [ACS Kubernetes Quick Start](https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-walkthrough).
 
-# Twitter
-export TWITTER_CONSUMER_KEY=000000000000000000000000
-export TWITTER_CONSUMER_SECRET=000000000000000000000000000000000000000000000000
-export TWITTER_ACCESS_TOKEN=000000000-000000000000000000000000000000000000000000000000
-export TWITTER_ACCESS_TOKEN_SECRET=000000000000000000000000000000000000000000000000
-export TWITTER_TEXT=seattle
-```
+### Twitter Application
 
-### Execution
+You also need a registered Twittered application, which can be created at [https://apps.twitter.com]( https://apps.twitter.com).
 
-The `get-tweet.py` files is found at `.twitter-sentiment-cosmosdb/get-tweet/get-tweet.py`.
+From this application, you need the following items:
 
-```
-python get-tweet.py
-```
+- TWITTER_CONSUMER_KEY
+- TWITTER_CONSUMER_SECRET
+- TWITTER_ACCESS_TOKEN
+- TWITTER_ACCESS_TOKEN_SECRET
 
-## Process Tweets
+## Create Azure Queue, Cognitive Services Text Sentiment API, and Cosmos DB. 
 
-### Prerequisites
+Copy the `build-twitter-sentiment.sh` script to your development machine. The script can be founder [here](./demo-creation-script/build-twitter-sentiment.sh).
 
-- Python 3
-- [Azure Storage Queue](https://docs.microsoft.com/en-us/azure/storage/storage-python-how-to-use-queue-storage)
-- [Azure Analytics text sentiment API](https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/quick-start)
-- [Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/introduction)
-
-### Environment variables
+Update the script with your Twitter application information and the text that you want use to filter returned tweets. 
 
 ```
-# Azure Storage
-export AZURE_STORAGE_ACCT=kubeazurequeue
-export AZURE_QUEUE=kubeazurequeue
-export AZURE_QUEUE_KEY=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+# Twitter API Endpoint and Credentials - this is not automated so must be specified.
+TWITTER_CONSUMER_KEY=replace
+TWITTER_CONSUMER_SECRET=replace
+TWITTER_ACCESS_TOKEN=replace
+TWITTER_ACCESS_TOKEN_SECRET=replace
 
-# Azure Analytics
-export AZURE_ANALYTICS_URI=https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment
-export AZURE_ANALYTICS_KEY=00000000000000000000000000000000
-
-# Cosmos DB
-export COSMOS_DB_ENDPOINT=https://twitter-sentiment.documents.azure.com
-export COSMOS_DB_MASTERKEY=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-export COSMOS_DB_DATABASE=tweet-sentiment
-export COSMOS_DB_COLLECTION=tweet-sentiment
+# Twitter search term - used to filter returned tweets.
+TWITTER_TEXT=Seattle
 ```
 
-### Execution
-
-The `process-tweet.py` files is found at `.twitter-sentiment-cosmosdb/process-tweet/process-tweet.py`.
+Once complete, run the script.
 
 ```
-python process-tweet.py
+sh twitter-sentiment.sh
 ```
 
-## Chart Tweets
+## Start the Application
 
-Python Flask app that reads tweet sentiment from Cosmos DB and creates results pie chart.
+The included script not only creates the required Azure resource, it also creates pre-populated Kubernetes manifest files that can be used to start the application. The manifest file is located in the directory from which the script was run.
 
-### Prerequisites
+Note – the Azure secrets are not secured in a Kubernetes secret.
 
-- Python 3
-- [Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/introduction)
+The manifest creates the following Kubernetes objects:
 
-### Environment variables
-
-```
-# Cosmos DB
-export COSMOS_DB_ENDPOINT=https://twitter-sentiment.documents.azure.com
-export COSMOS_DB_MASTERKEY=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-export COSMOS_DB_DATABASE=tweet-sentiment
-export COSMOS_DB_COLLECTION=tweet-sentiment
-```
-
-### Execution
-
-The `main.py` files is found at `.twitter-sentiment-cosmosdb/chart-tweet/main.py`.
+- Get Tweet Deployment – gets tweets from Twitter streaming API, places the text on an Azure Queue.
+- Process Tweet Deployment – gets tweets from Azure Queue, returns text sentiment score, puts this into a Cosmos DB.
+- Chart Tweets Deployment – Retrieves and charts the tweet sentiment.
+- Cart Tweets Service – exposes the chart to the internet.
 
 ```
-python main.py
+kubectl create -f twitter-sentiment.yml
 ```
+
+Output:
+
+```
+deployment "process-tweet" created
+deployment "get-tweet" created
+deployment "chart-tweet" created
+service "chart-tweet" created
+```
+
+The Chart Tweet service can take some time to complete. To want progress, start a watch on the ‘kubectl get service’ command.
+
+```
+kubectl get service -w
+```
+
+Once a public IP address has been return browse to this IP address to see the retuned sentiment results.
+
+![Image of tweet sentiment chart](media/chart.png)
+
+
+

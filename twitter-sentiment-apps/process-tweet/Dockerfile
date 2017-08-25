@@ -6,4 +6,4 @@ RUN pip install pydocumentdb && \
 
 ADD ./process-tweet.py /app/process-tweet.py
 
-ENTRYPOINT ["python", "/app/process-tweet.py"]
+CMD ["/bin/sh", "-c", "python -u /app/process-tweet.py > kubelog.log 2>&1"]
