@@ -1,16 +1,16 @@
 # Twitter API Endpoint and Credentials - this is not automated so must be specified.
-TWITTER_CONSUMER_KEY=ROgy0lRckDNDXfRtkYYefr7TT
-TWITTER_CONSUMER_SECRET=iLT0fQV0vw3orRbDGqCwXj2aHJoygOr0Yxw7XrBBJOEf81lyLv
-TWITTER_ACCESS_TOKEN=556115100-IYoAeEAVj2oFqKeLA3QmQyLs8VPft9AC8NS4TV0Q
-TWITTER_ACCESS_TOKEN_SECRET=ohAOB5kDgXJ6sIfEt3UyWnpUq6y9VbRcGQU4OOiPnGAIP
+TWITTER_CONSUMER_KEY=replace
+TWITTER_CONSUMER_SECRET=replace
+TWITTER_ACCESS_TOKEN=replace
+TWITTER_ACCESS_TOKEN_SECRET=replace
 
 # Twitter search term - used to filter returned tweets.
 TWITTER_TEXT=Seattle
 
 # Names for the Azure Resource Group, Storage Account, and Cosmos DB name.
 AZURE_RESOURCE_GROUP=mytwittersentiment
-AZURE_STORAGE_ACCT=mytwittersentiment
-AZURE_COSMOS_DB=mytwittersentiment
+AZURE_STORAGE_ACCT=mytwittersentiment$RANDOM
+AZURE_COSMOS_DB=mytwittersentiment$RANDOM
 AZURE_ANALYTICS=mytwittersentiment
 
 # Create resource group
@@ -50,7 +50,7 @@ spec:
     spec:
       containers:
       - name: process-tweet
-        image: neilpeterson/process-tweet-log
+        image: neilpeterson/process-tweet
         env:
         - name: AZURE_ANALYTICS_URI
           value: $AZURE_ANALYTICS_ENDPOINT

@@ -38,9 +38,9 @@ From this application, you need the following items:
 
 ## Create Azure Queue, Cognitive Services Text Sentiment API, and Cosmos DB. 
 
-Copy the `build-twitter-sentiment.sh` script to your development machine.
+Copy the `build-twitter-sentiment.sh` script to your development machine. The script can be founder [here](./demo-creation-script/build-twitter-sentiment.sh).
 
-Update the following items with your Twitter application information, names for the Azure resources, and the text that you want use to filter returned tweets. 
+Update the script with your Twitter application information and the text that you want use to filter returned tweets. 
 
 ```
 # Twitter API Endpoint and Credentials - this is not automated so must be specified.
@@ -51,19 +51,19 @@ TWITTER_ACCESS_TOKEN_SECRET=replace
 
 # Twitter search term - used to filter returned tweets.
 TWITTER_TEXT=Seattle
-
-# Names for the Azure Resource Group, Storage Account, and Cosmos DB name.
-AZURE_RESOURCE_GROUP=mytwittersentiment
-AZURE_STORAGE_ACCT=mytwittersentiment
-AZURE_COSMOS_DB=mytwittersentiment
-AZURE_ANALYTICS=mytwittersentiment
 ```
 
-Run the script.
+Once complete, run the script.
+
+```
+sh twitter-sentiment.sh
+```
 
 ## Start the Application
 
-The included script not only creates the required Azure resource, it also creates pre-populated Kubernetes manifest files that can be used to start the application. Note – the Azure secrets are not secured in a Kubernetes secret.
+The included script not only creates the required Azure resource, it also creates pre-populated Kubernetes manifest files that can be used to start the application. The manifest file is located in the directory from which the script was run.
+
+Note – the Azure secrets are not secured in a Kubernetes secret.
 
 The manifest creates the following Kubernetes objects:
 
