@@ -1,32 +1,32 @@
 # Twitter API Endpoint and Credentials - this is not automated so must be specified.
-TWITTER_CONSUMER_KEY=ROgy0lRckDNDXfRtkYYefr7TT
-TWITTER_CONSUMER_SECRET=iLT0fQV0vw3orRbDGqCwXj2aHJoygOr0Yxw7XrBBJOEf81lyLv
-TWITTER_ACCESS_TOKEN=556115100-IYoAeEAVj2oFqKeLA3QmQyLs8VPft9AC8NS4TV0Q
-TWITTER_ACCESS_TOKEN_SECRET=ohAOB5kDgXJ6sIfEt3UyWnpUq6y9VbRcGQU4OOiPnGAIP
+TWITTER_CONSUMER_KEY=replace
+TWITTER_CONSUMER_SECRET=replace
+TWITTER_ACCESS_TOKEN=replace
+TWITTER_ACCESS_TOKEN_SECRET=replace
 
 # Twitter search term.
 TWITTER_TEXT=azure
 
 # Azure Group, Storage account, and Cosmos DB name to be created.
-AZURE_RESOURCE_GROUP=myTwitterSentiment5
-AZURE_STORAGE_ACCT=mytwittersentiment5
-AZURE_COSMOS_DB=mytwittersentiment5
-AZURE_ANALYTICS=mytwittersentiment5
+AZURE_RESOURCE_GROUP=myTwitterSentiment
+AZURE_STORAGE_ACCT=mytwittersentiment
+AZURE_COSMOS_DB=mytwittersentiment
+AZURE_ANALYTICS=mytwittersentiment
 
-# # Create resource group
-# az group create --name $AZURE_RESOURCE_GROUP --location eastus
+# Create resource group
+az group create --name $AZURE_RESOURCE_GROUP --location eastus
 
-# # Create storage account
-# az storage account create --name $AZURE_STORAGE_ACCT --resource-group $AZURE_RESOURCE_GROUP --sku Standard_LRS
+# Create storage account
+az storage account create --name $AZURE_STORAGE_ACCT --resource-group $AZURE_RESOURCE_GROUP --sku Standard_LRS
 
-# # Create storage queue
-# az storage queue create --name $AZURE_STORAGE_ACCT --account-name $AZURE_STORAGE_ACCT 
+# Create storage queue
+az storage queue create --name $AZURE_STORAGE_ACCT --account-name $AZURE_STORAGE_ACCT 
 
-# # Create Comsmos DB
-# az cosmosdb create --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP
+# Create Comsmos DB
+az cosmosdb create --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP
 
-# # Create Congnitive Services API
-# az group deployment create --name $AZURE_ANALYTICS --resource-group $AZURE_RESOURCE_GROUP --template-file azuredeploy.json --parameters text_sentiment_api=$AZURE_ANALYTICS
+# Create Congnitive Services API
+az group deployment create --name $AZURE_ANALYTICS --resource-group $AZURE_RESOURCE_GROUP --template-file azuredeploy.json --parameters text_sentiment_api=$AZURE_ANALYTICS
 
 # # Get endpoints and keys
 AZURE_QUEUE_KEY=$(az storage account keys list --account-name $AZURE_STORAGE_ACCT --resource-group $AZURE_RESOURCE_GROUP --query [0].value -o tsv)
