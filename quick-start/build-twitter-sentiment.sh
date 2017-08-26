@@ -26,7 +26,7 @@ az storage queue create --name $AZURE_STORAGE_ACCT --account-name $AZURE_STORAGE
 az cosmosdb create --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP
 
 # Create Congnitive Services API
-TEMPLATE_FILE=https://raw.githubusercontent.com/neilpeterson/twitter-sentiment-cosmosdb/master/demo-script/azuredeploy.json
+TEMPLATE_FILE=https://raw.githubusercontent.com/neilpeterson/twitter-sentiment-cosmosdb/master/quick-start/azuredeploy.json
 az group deployment create --name $AZURE_ANALYTICS --resource-group $AZURE_RESOURCE_GROUP --template-uri $TEMPLATE_FILE --parameters text_sentiment_api=$AZURE_ANALYTICS
 
 # # Get endpoints and keys
