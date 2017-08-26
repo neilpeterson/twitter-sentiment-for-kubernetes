@@ -1,17 +1,17 @@
 # Twitter Sentiment to Cosmos DB
 
-### Get Tweets
+### [Get Tweets](../../get-tweet)
 
 - Collects tweets based on a key word
 - Stores these in an Azure Queue
 
-### Process Tweets
+### [Process Tweets](../../process-tweet)
 
 - Get Tweets from Azure Queue
 - Get sentiment of Tweet from Azure Analytics
 - Puts Tweet message and sentiment score into a Cosmos DB
 
-### Chart Tweets
+### [Chart Tweets](../../chart-tweet)
 
 - Creates a pie chart with tweet sentiment results.
 
@@ -35,6 +35,10 @@ From this application, you need the following items:
 - TWITTER_CONSUMER_SECRET
 - TWITTER_ACCESS_TOKEN
 - TWITTER_ACCESS_TOKEN_SECRET
+
+### Azure Subscription and CLI
+
+You will need an Azure Subscription and the Azure CLI. 
 
 ## Create Azure Queue, Cognitive Services Text Sentiment API, and Cosmos DB. 
 
