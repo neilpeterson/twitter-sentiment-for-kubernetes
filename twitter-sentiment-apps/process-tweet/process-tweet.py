@@ -4,6 +4,8 @@ import pydocumentdb.document_client as document_client
 import os
 import json
 import requests
+import sys
+import time
 
 # Azure Analytics
 AZURE_ANALYTICS_URI = os.environ['AZURE_ANALYTICS_URI']
@@ -102,7 +104,9 @@ def add_tweet_cosmosdb(messgae,sentiment):
 
 # KILL SWITCH
 def kill_switch():
-    if "KILL_SWITCH" in os.environ:
+
+    # Simple operation for Kubernetes postStop hook
+    if os.path.exists("/kill_switch"):
         print("Stop processing due to kill switch.")
         sys.exit(1)
 
