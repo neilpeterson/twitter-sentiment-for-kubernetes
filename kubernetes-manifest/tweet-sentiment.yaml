@@ -37,8 +37,8 @@ spec:
         lifecycle:
           preStop:
               exec:
-                command: ["bin/sh","-c","export KILL_SWITCH=true"]
-      terminationGracePeriodSeconds: 0
+                command: ["bin/sh","-c","touch /kill_switch"]
+      terminationGracePeriodSeconds: 2
 ---
 apiVersion: apps/v1beta1
 kind: Deployment

@@ -71,7 +71,11 @@ spec:
           value: $AZURE_COSMOS_DB
         - name:  COSMOS_DB_COLLECTION
           value: $AZURE_COSMOS_DB
-      terminationGracePeriodSeconds: 0
+        lifecycle:
+          preStop:
+              exec:
+                command: ["bin/sh","-c","touch /kill_switch"]
+      terminationGracePeriodSeconds: 2
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
