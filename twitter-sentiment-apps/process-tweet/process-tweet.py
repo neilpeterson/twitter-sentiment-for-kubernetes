@@ -5,7 +5,6 @@ import os
 import json
 import requests
 import sys
-import time
 
 # Azure Analytics
 AZURE_ANALYTICS_URI = os.environ['AZURE_ANALYTICS_URI']
@@ -28,7 +27,7 @@ QUEUE_SERVICE = QueueService(account_name=AZURE_STORAGE_ACCT, account_key=AZURE_
 # Build Cosmos DB client
 client = document_client.DocumentClient(COSMOS_DB_ENDPOINT, {'masterKey': COSMOS_DB_MASTERKEY})
 
-############# Start Functions
+# Start Functions
 
 # Get text sentiment from Azure Analytics
 def analytics(text):
@@ -48,11 +47,11 @@ def analytics(text):
     }
 
     r = requests.post(AZURE_ANALYTICS_URI, data=json.dumps(payload), headers=headers)
-    
+
     try:
         return json.loads(r.text)['documents'][0]['score']
     except:
-        print("Analytics error.")   
+        print("Analytics error.")
 
 # Get Azure Queue count
 def queue_count():
@@ -63,21 +62,19 @@ def queue_count():
 
 # Delete Azure Queue message
 def delete_queue_message(queue, id, pop_receipt):
-    QUEUE_SERVICE.delete_message(queue,id,pop_receipt)
+    QUEUE_SERVICE.delete_message(queue, id, pop_receipt)
 
 # Initialize Cosmos DB
 def cosmosdb():
 
-    # Quick hack - fix up proper
-    # Check for database
+    # Check for database - quick hack /fix up proper
     try:
         db = next((data for data in client.ReadDatabases() if data['id'] == COSMOS_DB_DATABASE))
     # Create if missing
     except:
         db = client.CreateDatabase({'id': COSMOS_DB_DATABASE})
 
-    # Quick hack - fix up proper
-    # Check for collection
+    # Check for collection - quick hack /fix up proper
     try:
         collection = next((coll for coll in client.ReadCollections(db['_self']) if coll['id'] == COSMOS_DB_COLLECTION))
     # Create if missing
@@ -95,7 +92,7 @@ def cosmosdb():
     return collection
 
 # Add tweet and sentiment score to Cosmos DB
-def add_tweet_cosmosdb(messgae,sentiment):
+def add_tweet_cosmosdb(messgae, sentiment):
     client.CreateDocument(collection['_self'],
         {
             'message': messgae,
@@ -110,15 +107,14 @@ def kill_switch():
         print("Stop processing due to kill switch.")
         sys.exit(1)
 
-############# End Functions
+# End Functions
 
 # Initalize Cosmos DB
 collection = cosmosdb()
 
 while True:
 
-    # Kill switch can be set to stop queue message processing.
-    # This can be used with Kubernetes preStop hook for graceful scale down.
+    # Used with Kubernetes preStop hook for graceful scale down.
     kill_switch()
 
     # Get tweets from Azure Queue
@@ -132,7 +128,7 @@ while True:
         print(returned_sentiment)
 
         # Add tweet and sentiment score to Cosmos DB
-        add_tweet_cosmosdb(message.content,returned_sentiment)
+        add_tweet_cosmosdb(message.content, returned_sentiment)
 
         # Delete message from queue
-        delete_queue_message(AZURE_QUEUE,message.id, message.pop_receipt)
+        delete_queue_message(AZURE_QUEUE, message.id, message.pop_receipt)
