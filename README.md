@@ -17,13 +17,11 @@
 
 # Videos
 
-[Application Demo](https://www.youtube.com)
+[Application Demo](https://youtu.be/qJpv-TwW3w0)
 
-[Application Quickstart](http://www.youtube.com/watch?v=wtTzWW8ZHuw)
+[Application Quickstart](https://youtu.be/v-RobmRUdFg)
 
-[Manual Scale](https://www.youtube.com)
-
-[Custom Auto Scale](https://www.youtube.com)
+[Manual and Auto Scale](https://www.youtube.com)
 
 [Kubernetes Custom Resource Definition (CRD)](https://www.youtube.com)
 
