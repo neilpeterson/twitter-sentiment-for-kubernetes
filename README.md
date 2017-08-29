@@ -19,7 +19,7 @@
 
 [Application Demo](https://www.youtube.com)
 
-[Application Quickstart](https://www.youtube.com)
+[Application Quickstart](http://www.youtube.com/watch?v=wtTzWW8ZHuw)
 
 [Manual Scale](https://www.youtube.com)
 
