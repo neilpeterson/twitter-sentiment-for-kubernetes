@@ -21,11 +21,11 @@
 
 [Application Quickstart](https://youtu.be/v-RobmRUdFg)
 
-[Manual and Auto Scale](https://www.youtube.com)
+[Manual and Auto Scale](http://www.youtube.com/watch?v=J1a4fTb2grg)
 
-[Kubernetes Custom Resource Definition (CRD)](https://www.youtube.com)
+Kubernetes Custom Resource Definition (CRD) - comming soon
 
-[Kubernetes postStop Hook](https://www.youtube.com)
+Kubernetes postStop Hook - comming soon
 
 # Quick Start:
 
