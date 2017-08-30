@@ -1,14 +1,14 @@
 # Twitter Sentiment to Cosmos DB
 
-## [Get Tweets](../../tree/master/twitter-sentiment-apps/get-tweet)
+### [Get Tweets](../../tree/master/twitter-sentiment-apps/get-tweet)
 
 Collects tweets based on a key word and stores these in an Azure Queue.
 
-## [Process Tweets](../../tree/master/twitter-sentiment-apps/process-tweet)
+### [Process Tweets](../../tree/master/twitter-sentiment-apps/process-tweet)
 
 Get Tweets from Azure Queue, performs sentiment analysis using Azure Analytics, and stores the results in Cosmos DB.
 
-## [Chart Tweets](../../tree/master/twitter-sentiment-apps/chart-tweet)
+### [Chart Tweets](../../tree/master/twitter-sentiment-apps/chart-tweet)
 
 Creates a pie chart with tweet sentiment results.
 
@@ -26,13 +26,13 @@ Kubernetes postStop Hook - comming soon
 
 # Prerequisites
 
-## Kubernetes Cluster 
+### Kubernetes Cluster 
 
 You will need a Kubernetes cluster before running the Twitter Sentiment to Cosmos DB application. 
 
 To create a Kubernetes cluster in Azure Container Service, see [ACS Kubernetes Quick Start](https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-walkthrough).
 
-## Twitter Application
+### Twitter Application
 
 You also need a registered Twittered application, which can be created at [https://apps.twitter.com]( https://apps.twitter.com).
 
@@ -43,7 +43,7 @@ From this application, you need the following items:
 - TWITTER_ACCESS_TOKEN
 - TWITTER_ACCESS_TOKEN_SECRET
 
-## Azure Subscription and CLI
+### Azure Subscription and CLI
 
 You will need an Azure Subscription and the Azure CLI. 
 
@@ -51,6 +51,8 @@ You will need an Azure Subscription and the Azure CLI.
 [Azure CLI Installation](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
 # Quick Start
+
+## Deploy Azure resources and create Kubernetes manifest file
 
 Copy the `build-twitter-sentiment.sh` script to your development machine. The script can be founder [here](./demo-creation-script/build-twitter-sentiment.sh).
 
@@ -73,7 +75,7 @@ Once complete, run the script.
 sh twitter-sentiment.sh
 ```
 
-## Start the Application
+## Run the Application
 
 The included script not only creates the required Azure resource, it also creates pre-populated Kubernetes manifest files that can be used to start the application. The manifest file is located in the directory from which the script was run.
 
