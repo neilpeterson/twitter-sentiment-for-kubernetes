@@ -10,7 +10,7 @@ Get Tweets from Azure Queue, performs sentiment analysis using Azure Analytics, 
 
 ### [Chart Tweets](../../tree/master/twitter-sentiment-apps/chart-tweet)
 
-- Creates a pie chart with tweet sentiment results.
+Creates a pie chart with tweet sentiment results.
 
 # Videos
 
