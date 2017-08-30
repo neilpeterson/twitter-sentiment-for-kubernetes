@@ -77,9 +77,9 @@ sh twitter-sentiment.sh
 
 ## Run the Application
 
-The included script not only creates the required Azure resource, it also creates pre-populated Kubernetes manifest files that can be used to start the application. The manifest file is located in the directory from which the script was run.
+The included script not only creates the required Azure resource, it also creates a pre-populated Kubernetes manifest file that can be used to start the application. The manifest file is located in the directory from which the script was run.
 
-Note – the Azure secrets are not secured in a Kubernetes secret.
+Note: Several Azure connection strings and keys are stored in the pre-created manifest files. Consider using Kubernetes secrets when performing similar operations with production applications.
 
 Run the manifest file.
 
