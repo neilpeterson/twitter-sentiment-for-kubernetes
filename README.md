@@ -15,6 +15,18 @@
 
 - Creates a pie chart with tweet sentiment results.
 
+# Videos
+
+[Application Demo](https://youtu.be/qJpv-TwW3w0)
+
+[Application Quickstart](https://youtu.be/v-RobmRUdFg)
+
+[Manual and Auto Scale](http://www.youtube.com/watch?v=J1a4fTb2grg)
+
+Kubernetes Custom Resource Definition (CRD) - comming soon
+
+Kubernetes postStop Hook - comming soon
+
 # Quick Start:
 
 ## Prerequisites
