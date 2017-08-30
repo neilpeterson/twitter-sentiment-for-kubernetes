@@ -12,6 +12,10 @@ Get Tweets from Azure Queue, performs sentiment analysis using Azure Analytics, 
 
 Creates a pie chart with tweet sentiment results.
 
+### Custom Kubernetes Auto Scaler
+
+This application was written to demo a custom Kubernetes auto scaler. The auto scaler Custom Resource Definition (CRD) and controller can be found [here](https://github.com/neilpeterson/kubernetes-auto-scale-azure-crd). 
+
 # Videos
 
 [Application Demo](https://youtu.be/qJpv-TwW3w0)
