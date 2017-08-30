@@ -29,7 +29,8 @@ client = document_client.DocumentClient(COSMOS_DB_ENDPOINT, {'masterKey': COSMOS
 
 # Start Functions
 
-# Get text sentiment from Azure Analytics
+# Get sentiment
+# TODO - handle multiple tweets in single post
 def analytics(text):
     headers = {
         'Content-Type': 'application/json',

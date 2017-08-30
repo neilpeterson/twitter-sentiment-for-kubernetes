@@ -2,14 +2,11 @@
 
 ### [Get Tweets](../../tree/master/twitter-sentiment-apps/get-tweet)
 
-- Collects tweets based on a key word.
-- Stores these in an Azure Queue.
+Collects tweets based on a key word and stores these in an Azure Queue.
 
 ### [Process Tweets](../../tree/master/twitter-sentiment-apps/process-tweet)
 
-- Get Tweets from Azure Queue.
-- Get sentiment of Tweet from Azure Analytics.
-- Puts Tweet message and sentiment score into a Cosmos DB.
+Get Tweets from Azure Queue, performs sentiment analysis using Azure Analytics, and stores the results in Cosmos DB.
 
 ### [Chart Tweets](../../tree/master/twitter-sentiment-apps/chart-tweet)
 
