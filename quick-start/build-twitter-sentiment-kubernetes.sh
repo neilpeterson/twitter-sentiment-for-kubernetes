@@ -1,5 +1,5 @@
 # Twitter API Endpoint and Credentials - this is not automated so must be specified.
-TWITTER_CONSUMER_KEY=<replcae>
+TWITTER_CONSUMER_KEY=<replace>
 TWITTER_CONSUMER_SECRET=<replace>
 TWITTER_ACCESS_TOKEN=<replace>
 TWITTER_ACCESS_TOKEN_SECRET=<replace>
