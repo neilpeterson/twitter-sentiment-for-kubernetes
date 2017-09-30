@@ -1,8 +1,8 @@
 # Twitter API Endpoint and Credentials - this is not automated so must be specified.
-TWITTER_CONSUMER_KEY=replace
-TWITTER_CONSUMER_SECRET=replace
-TWITTER_ACCESS_TOKEN=replace
-TWITTER_ACCESS_TOKEN_SECRET=replace
+TWITTER_CONSUMER_KEY=<replcae>
+TWITTER_CONSUMER_SECRET=<replace>
+TWITTER_ACCESS_TOKEN=<replace>
+TWITTER_ACCESS_TOKEN_SECRET=<replace>
 
 # Twitter search term - used to filter returned tweets.
 TWITTER_TEXT=Seattle
@@ -36,8 +36,8 @@ COSMOS_DB_MASTERKEY=$(az cosmosdb list-keys --name $AZURE_COSMOS_DB --resource-g
 AZURE_ANALYTICS_ENDPOINT=$(az cognitiveservices account show --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query endpoint -o tsv)/sentiment
 AZURE_ANALYTICS_KEY=$(az cognitiveservices account keys list --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query key1 -o tsv)
 
-# Create YAML
-cat <<EOF > twitter-sentiment.yml
+# Create Twitter Sentiment Manifest
+cat <<EOF > twitter-sentiment-kubernetes-manifest.yml
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -148,8 +148,8 @@ spec:
     app: chart-tweet
 EOF
 
-# Create YAML
-cat <<EOF > twitter-sentiment-auto-scale.yml
+# Create Kubernetes CRD Manifest for auto scaling Twitter Sentiment
+cat <<EOF > twitter-sentiment-kubernetes-crd.yml
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
@@ -196,8 +196,50 @@ spec:
         image: neilpeterson/azure-queue-controller
 EOF
 
+# Create Compose File
+cat <<EOF > docker-compose.yml
+version: '3'
+services: 
+  get-tweet:
+    image: neilpeterson/get-tweet
+    container_name: get-tweet
+    environment:
+      AZURE_STORAGE_ACCT: $AZURE_STORAGE_ACCT
+      AZURE_QUEUE: $AZURE_STORAGE_ACCT
+      AZURE_QUEUE_KEY: $AZURE_QUEUE_KEY
+      TWITTER_CONSUMER_KEY: $TWITTER_CONSUMER_KEY
+      TWITTER_CONSUMER_SECRET: $TWITTER_CONSUMER_SECRET
+      TWITTER_ACCESS_TOKEN: $TWITTER_ACCESS_TOKEN
+      TWITTER_ACCESS_TOKEN_SECRET: $TWITTER_ACCESS_TOKEN_SECRET
+      TWITTER_TEXT: $TWITTER_TEXT
+  process-tweet:
+    image: neilpeterson/process-tweet
+    container_name: process-tweet
+    environment:
+      AZURE_ANALYTICS_URI: $AZURE_ANALYTICS_ENDPOINT
+      AZURE_ANALYTICS_KEY: $AZURE_ANALYTICS_KEY
+      AZURE_STORAGE_ACCT: $AZURE_STORAGE_ACCT
+      AZURE_QUEUE: $AZURE_STORAGE_ACCT
+      AZURE_QUEUE_KEY: $AZURE_QUEUE_KEY
+      COSMOS_DB_ENDPOINT: $COSMOS_DB_ENDPOINT
+      COSMOS_DB_MASTERKEY: $COSMOS_DB_MASTERKEY
+      COSMOS_DB_DATABASE: $AZURE_COSMOS_DB
+      COSMOS_DB_COLLECTION: $AZURE_COSMOS_DB
+  chart-tweet:
+    image: neilpeterson/chart-tweet
+    container_name: chart-tweet
+    environment:
+      COSMOS_DB_ENDPOINT: $COSMOS_DB_ENDPOINT
+      COSMOS_DB_MASTERKEY: $COSMOS_DB_MASTERKEY
+      COSMOS_DB_DATABASE: $AZURE_COSMOS_DB
+      COSMOS_DB_COLLECTION: $AZURE_COSMOS_DB
+      CHART_LABEL: $TWITTER_TEXT
+    ports:
+      - "8080:80"
+EOF
+
 # Create environment variables
-cat <<EOF > twitter-sentiment-variables.sh
+cat <<EOF > twitter-sentiment-environment-variables.sh
 # Azure Analytics
 export AZURE_ANALYTICS_URI=$AZURE_ANALYTICS_ENDPOINT
 export AZURE_ANALYTICS_KEY=$AZURE_ANALYTICS_KEY
