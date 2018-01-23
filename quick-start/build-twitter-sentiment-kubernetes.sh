@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Twitter API Endpoint and Credentials - this is not automated so must be specified.
 TWITTER_CONSUMER_KEY=<replace>
 TWITTER_CONSUMER_SECRET=<replace>
@@ -262,3 +264,25 @@ export COSMOS_DB_MASTERKEY=$COSMOS_DB_MASTERKEY
 export COSMOS_DB_DATABASE=$AZURE_COSMOS_DB
 export COSMOS_DB_COLLECTION=$AZURE_COSMOS_DB
 EOF
+
+# Create TMUX script
+cat <<EOF > tmux.sh
+#!/bin/bash
+
+tmux new -s work -d
+tmux send-keys -t work 'export AZURE_STORAGE_ACCT=$AZURE_STORAGE_ACCT' C-m
+tmux send-keys -t work 'export AZURE_QUEUE=$AZURE_STORAGE_ACCT' C-m
+tmux send-keys -t work 'export AZURE_QUEUE_KEY=$AZURE_QUEUE_KEY' C-m
+tmux send-keys -t work 'virtualenv -p python3 venv;source venv/bin/activate' C-m
+tmux send-keys -t work 'pip install azure-storage' C-m
+tmux send-keys -t work 'clear' C-m
+tmux split-window -v -t work
+tmux send-keys -t work 'export AZURE_STORAGE_ACCT=$AZURE_STORAGE_ACCT' C-m
+tmux send-keys -t work 'export AZURE_QUEUE=$AZURE_STORAGE_ACCT' C-m
+tmux send-keys -t work 'export AZURE_QUEUE_KEY=$AZURE_QUEUE_KEY' C-m
+tmux send-keys -t work 'virtualenv -p python3 venv;source venv/bin/activate' C-m
+tmux send-keys -t work 'pip install azure-storage' C-m
+tmux send-keys -t work 'python azure-queue-count.py' C-m
+tmux split-window -h -t work
+tmux send-keys -t work 'while \$true; do kubectl get pods -l app=process-tweet; sleep .5; done' C-m
+tmux attach -t work
