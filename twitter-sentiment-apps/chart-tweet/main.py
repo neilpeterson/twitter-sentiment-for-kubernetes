@@ -50,7 +50,7 @@ def index():
     pie_chart.title = chart_title
     pie_chart.add('Positive',positive)
     pie_chart.add('Neutral',neutral)
-    pie_chart.add('Negitive', negative)    
+    pie_chart.add('Negative', negative)    
     graph = pie_chart.render_data_uri()
     return render_template("index.html", graph_data = graph)
 
