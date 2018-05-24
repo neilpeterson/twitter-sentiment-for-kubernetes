@@ -24,10 +24,6 @@ This application was written to demo a custom Kubernetes auto scaler. The auto s
 
 [Manual and Auto Scale](http://www.youtube.com/watch?v=J1a4fTb2grg)
 
-Kubernetes Custom Resource Definition (CRD) - comming soon
-
-Kubernetes postStop Hook - comming soon
-
 # Prerequisites
 
 ### Kubernetes Cluster 
@@ -56,61 +52,4 @@ You will need an Azure Subscription and the Azure CLI.
 
 # Quick Start
 
-## Deploy Azure resources and create Kubernetes manifest file
-
-Copy the `build-twitter-sentiment.sh` script to your development machine. The script can be founder [here](./demo-creation-script/build-twitter-sentiment.sh).
-
-Update the script with your Twitter application information and the text that you want use to filter returned tweets. 
-
-```
-# Twitter API Endpoint and Credentials - this is not automated so must be specified.
-TWITTER_CONSUMER_KEY=replace
-TWITTER_CONSUMER_SECRET=replace
-TWITTER_ACCESS_TOKEN=replace
-TWITTER_ACCESS_TOKEN_SECRET=replace
-
-# Twitter search term - used to filter returned tweets.
-TWITTER_TEXT=Seattle
-```
-
-Once complete, run the script.
-
-```
-sh twitter-sentiment.sh
-```
-
-## Run the Application
-
-The included script not only creates the required Azure resource, it also creates a pre-populated Kubernetes manifest file that can be used to start the application. The manifest file is located in the directory from which the script was run.
-
-Note: Several Azure connection strings and keys are stored in the pre-created manifest files. Consider using Kubernetes secrets when performing similar operations with production applications.
-
-Run the manifest file.
-
-```
-kubectl create -f twitter-sentiment.yml
-```
-
-Output:
-
-```
-deployment "process-tweet" created
-deployment "get-tweet" created
-deployment "chart-tweet" created
-service "chart-tweet" created
-```
-
-The Chart Tweet service can take some time to complete. To watch progress, run the following.
-
-```
-kubectl get service -w
-```
-
-Once a public IP address has been return browse to this IP address to see the retuned sentiment results.
-
-![Image of tweet sentiment chart](media/chart.png)
-
-## Caution
-
-Once the application starts, tweets are immediately captured, stored in the Azure Queue, and processed. While the application is running, it will incur an Azure cost. As the number of returned tweets increases, so does the Azure spend.
-
+https://github.com/neilpeterson/twitter-sentiment-quick-start
