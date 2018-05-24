@@ -23,13 +23,28 @@ api = tweepy.API(auth)
 # Build Azure queue object
 queue_service = QueueService(account_name=AZURE_STORAGE_ACCT, account_key=AZURE_QUEUE_KEY)
 
+# Check for queue / create queue
+queue = queue_service.list_queues()
+
+queueName = False
+
+for i in queue:
+    if AZURE_QUEUE == i.name:
+        queueName = True
+
+if not queueName:
+    print("Create Queue")
+    queue_service.create_queue(AZURE_QUEUE)
+else:
+    print("Queue exsists")
+
 # Define Tweepy stream class
 class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
-        
+
         # Filter out re-tweet is env variable is set
-        if "FILTER_RETWEET" in os.environ:        
+        if "FILTER_RETWEET" in os.environ:
             if (not status.retweeted) and ('RT @' not in status.text):
                 print(status.text)
                 queue_service.put_message(AZURE_QUEUE, status.text)

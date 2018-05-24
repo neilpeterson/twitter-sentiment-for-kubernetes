@@ -1,0 +1,72 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: tweet-scope-storage
+  namespace: default
+spec:
+  clusterServiceClassExternalName: azure-storage
+  clusterServicePlanExternalName: general-purpose-storage-account
+  parameters:
+    location: eastus
+    resourceGroup: tweet-scope
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: tweet-scope-storage-2-binding
+  namespace: default
+spec:
+  instanceRef:
+    name: tweet-scope-storage
+  secretName: tweet-scope-storage
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: get-tweet
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: get-tweet
+    spec:
+      containers:
+      - name: get-tweet
+        image: neilpeterson/get-tweet:v2
+        env:
+        - name: AZURE_QUEUE
+          value: mytwittersentiment
+        - name: TWITTER_CONSUMER_KEY
+          valueFrom:
+            secretKeyRef:
+              key: consumeKey
+              name: twitter
+        - name: TWITTER_CONSUMER_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: consumeSecret
+              name: twitter
+        - name: TWITTER_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: accessToken
+              name: twitter
+        - name: TWITTER_ACCESS_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: accessTokenSecret
+              name: twitter
+        - name: TWITTER_TEXT
+          value: Azure
+        - name: AZURE_STORAGE_ACCT
+          valueFrom:
+            secretKeyRef:
+              key: storageAccountName
+              name: tweet-scope-storage
+        - name: AZURE_QUEUE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: accessKey
+              name: tweet-scope-storage
+      terminationGracePeriodSeconds: 0
