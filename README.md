@@ -48,6 +48,7 @@ From this application, you need the following items:
 You will need an Azure Subscription and the Azure CLI. 
 
 [Free Azure Trial](https://azure.microsoft.com/en-us/free/?v=17.16&WT.srch=1&WT.mc_id=AID559320_SEM_BXZWtUPg&gclid=CjwKCAjwuITNBRBFEiwA9N9YEEvI-py5W2k4RXJcjHj_GCshHPGDY5DhdrHn3gyd6uXbtJ-7iHsjphoCJr0QAvD_BwE)
+
 [Azure CLI Installation](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
 # Quick Start
