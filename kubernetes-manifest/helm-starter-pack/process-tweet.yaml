@@ -1,0 +1,100 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: tweet-scope-analytics
+  namespace: default
+spec:
+  clusterServiceClassExternalName: azure-text-analytics
+  clusterServicePlanExternalName: standard-s0
+  parameters:
+    location: eastus
+    resourceGroup: tweet-scope
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: tweet-scope-analytics
+  namespace: default
+spec:
+  instanceRef:
+    name: tweet-scope-analytics
+  secretName: tweet-scope-analytics
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: tweet-scope-cosmos
+  namespace: default
+spec:
+  clusterServiceClassExternalName: azure-cosmosdb-sql
+  clusterServicePlanExternalName: sql-api
+  parameters:
+    location: eastus
+    resourceGroup: tweet-scope
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: tweet-scope-cosmos
+  namespace: default
+spec:
+  instanceRef:
+    name: tweet-scope-cosmos
+  secretName: tweet-scope-cosmos
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: process-tweet
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: process-tweet
+    spec:
+      containers:
+      - name: process-tweet
+        image: neilpeterson/process-tweet
+        env:
+        - name: AZURE_ANALYTICS_URI
+          valueFrom:
+            secretKeyRef:
+              key: endpoint
+              name: tweet-scope-analytics
+        - name: AZURE_ANALYTICS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: cognitivekey
+              name: tweet-scope-analytics
+        - name: AZURE_STORAGE_ACCT
+          valueFrom:
+            secretKeyRef:
+              key: storageAccountName
+              name: tweet-scope-storage
+        - name: AZURE_QUEUE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: accessKey
+              name: tweet-scope-storage
+        - name: AZURE_QUEUE
+          value: mytwittersentiment
+        - name: COSMOS_DB_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              key: uri
+              name: tweet-scope-cosmos
+        - name: COSMOS_DB_MASTERKEY
+          valueFrom:
+            secretKeyRef:
+              key: primaryKey
+              name: tweet-scope-cosmos
+        - name:  COSMOS_DB_DATABASE
+          value: mytwittersentiment
+        - name:  COSMOS_DB_COLLECTION
+          value: mytwittersentiment
+        lifecycle:
+          preStop:
+              exec:
+                command: ["bin/sh","-c","touch /kill_switch"]
+      terminationGracePeriodSeconds: 2

@@ -1,7 +1,7 @@
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
-  name: tweet-scope-storage-2
+  name: tweet-scope-storage
   namespace: default
 spec:
   clusterServiceClassExternalName: azure-storage
@@ -17,8 +17,8 @@ metadata:
   namespace: default
 spec:
   instanceRef:
-    name: tweet-scope-storage-2
-  secretName: tweet-scope-storage-2
+    name: tweet-scope-storage
+  secretName: tweet-scope-storage
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
@@ -58,15 +58,15 @@ spec:
               key: accessTokenSecret
               name: twitter
         - name: TWITTER_TEXT
-          value: Seattle
+          value: Azure
         - name: AZURE_STORAGE_ACCT
           valueFrom:
             secretKeyRef:
               key: storageAccountName
-              name: tweet-scope-storage-2
+              name: tweet-scope-storage
         - name: AZURE_QUEUE_KEY
           valueFrom:
             secretKeyRef:
               key: accessKey
-              name: tweet-scope-storage-2
+              name: tweet-scope-storage
       terminationGracePeriodSeconds: 0
