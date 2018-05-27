@@ -16,10 +16,10 @@ You also need an Azure account and the Azure CLI installed on your development s
 Clone this repo to your development system.
 
 ```
-git clone https://github.com/neilpeterson/twitter-sentiment-quick-start.git
+git clone https://github.com/neilpeterson/twitter-sentiment-for-kubernetes.git
 ```
 
-Open the `build-twitter-sentiment-kubernetes.sh file. In this file, update the Twitter key, secret, and tokens, and also the search term.
+Open the `quickstart/build-twitter-sentiment-kubernetes.sh file. In this file, update the Twitter key, secret, and tokens, and also the search term.
 
 ```
 #!/bin/bash
