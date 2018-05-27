@@ -10,6 +10,10 @@ import sys
 AZURE_ANALYTICS_URI = os.environ['AZURE_ANALYTICS_URI']
 AZURE_ANALYTICS_KEY = os.environ['AZURE_ANALYTICS_KEY']
 
+# Update with sentiment path if needed
+if "sentiment" not in AZURE_ANALYTICS_URI:
+    AZURE_ANALYTICS_URI = AZURE_ANALYTICS_URI + "/sentiment"
+
 # Azure Storage
 AZURE_STORAGE_ACCT = os.environ['AZURE_STORAGE_ACCT']
 AZURE_QUEUE = os.environ['AZURE_QUEUE']
