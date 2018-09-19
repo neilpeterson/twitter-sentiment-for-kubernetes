@@ -4,6 +4,8 @@ Collects tweets, gets sentiments of tweets, stores, and visualizes results.
 
 ![application architecture](/images/app.png)
 
+A Helm Chart for deploying this solution with the Kubernetes Service Catalog can be found [here](https://github.com/Azure-Samples/helm-charts/tree/master/chart-source/twitter-sentiment).
+
 ### [Get Tweets](../../tree/master/twitter-sentiment-apps/get-tweet)
 
 Collects tweets based on a key word and stores the tweet text in an Azure Queue.
