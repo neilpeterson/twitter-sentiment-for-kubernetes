@@ -15,6 +15,6 @@ plan: standard-s1
 resourceGroup: twitter-sentiment
 
 # Images
-chart-tweet-image: null
-get-tweet-image: null
-process-tweet-image: null
+chart-tweet-image: neilpeterson/chart-tweet
+get-tweet-image: neilpeterson/get-tweet:v2
+process-tweet-image: neilpeterson/process-tweet
