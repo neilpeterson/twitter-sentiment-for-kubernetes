@@ -1,3 +1,5 @@
+[![Build Status](https://nepeters-devops.visualstudio.com/twitter-sentiment-for-kubernetes/_apis/build/status/twitter-sentiment-for-kubernetes-CI?branchName=master)](https://nepeters-devops.visualstudio.com/twitter-sentiment-for-kubernetes/_build/latest?definitionId=9?branchName=master)
+
 # Twitter Sentiment to Cosmos DB
 
 Collects tweets, gets sentiments of tweets, stores, and visualizes results.
