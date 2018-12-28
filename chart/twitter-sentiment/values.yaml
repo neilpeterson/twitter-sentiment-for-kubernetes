@@ -8,13 +8,12 @@ consumerKey: controll
 consumerSecret: null
 accessToken: null
 accessTokenSecret: null
-filterText: Seattle
+filterText: Louisana
 
 # Azure
 plan: standard-s1
 resourceGroup: twitter-sentiment
 
 # Images
-chart-tweet-image: neilpeterson/chart-tweet
-get-tweet-image: neilpeterson/get-tweet:v2
-process-tweet-image: neilpeterson/process-tweet
+imageRegistry: nepetersacr.azurecr.io
+imageVersion: 159

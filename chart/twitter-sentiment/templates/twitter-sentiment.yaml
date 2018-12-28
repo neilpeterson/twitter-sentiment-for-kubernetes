@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-get-tweet
-        image: neilpeterson/get-tweet:v2
+        image: {{ .Values.imageRegistry }}/get-tweet:{{ .Values.imageVersion }}
         env:
         - name: AZURE_QUEUE
           value: mytwittersentiment
@@ -164,7 +164,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-process-tweet
-        image: neilpeterson/process-tweet
+        image: {{ .Values.imageRegistry }}/process-tweet:{{ .Values.imageVersion }}
         env:
         - name: AZURE_ANALYTICS_URI
           valueFrom:
@@ -223,7 +223,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-chart-tweet
-        image: neilpeterson/chart-tweet
+        image: {{ .Values.imageRegistry }}/chart-tweet:{{ .Values.imageVersion }}
         env:
         - name: COSMOS_DB_ENDPOINT
           valueFrom:
