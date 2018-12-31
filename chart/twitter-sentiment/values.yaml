@@ -8,7 +8,7 @@ consumerKey: controll
 consumerSecret: null
 accessToken: null
 accessTokenSecret: null
-filterText: Louisana
+filterText: null
 
 # Azure
 plan: standard-s1

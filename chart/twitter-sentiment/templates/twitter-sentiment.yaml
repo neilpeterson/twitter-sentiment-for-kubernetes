@@ -245,7 +245,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: { .Release.Name }}-chart-tweet
+  name: {{ .Release.Name }}-chart-tweet
   labels:
     app: {{ .Release.Name }}
 spec:
