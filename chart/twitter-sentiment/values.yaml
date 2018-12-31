@@ -15,5 +15,5 @@ plan: standard-s1
 resourceGroup: twitter-sentiment
 
 # Images
-imageRegistry: nepetersacr.azurecr.io
-imageVersion: 159
+imageRegistry: null
+imageVersion: null
