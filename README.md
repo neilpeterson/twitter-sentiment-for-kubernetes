@@ -22,4 +22,4 @@ Creates a pie chart with tweet sentiment results.
 
 ## Cloud Native Application Bundle
 
-I have also reciently ported this deployment to a Cloud Native Application Bundle (CNAB). See [this repo](https://github.com/neilpeterson/twitter-sentiment-duffle) for the Duffle bundle.
+I have also reciently ported this application to a Cloud Native Application Bundle (CNAB). See [this repo](https://github.com/neilpeterson/twitter-sentiment-duffle) for the Duffle bundle.
