@@ -9,7 +9,6 @@
     "author": "Jessica Deen",
     "license": "MIT",
     "dependencies": {
-        "figlet": "^1.1.0",
-        "bootstrap-vue": "1.0.0"
+        "figlet": "1.1.0"
     }
 }
