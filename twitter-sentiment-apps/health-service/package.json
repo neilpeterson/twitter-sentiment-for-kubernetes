@@ -9,6 +9,7 @@
     "author": "Jessica Deen",
     "license": "MIT",
     "dependencies": {
-        "figlet": "^1.1.0"
+        "figlet": "^1.1.0",
+        "stream-combine": "2.0.1"
     }
 }
