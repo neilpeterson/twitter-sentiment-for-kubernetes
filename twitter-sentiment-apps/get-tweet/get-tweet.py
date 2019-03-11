@@ -15,6 +15,14 @@ TWITTER_ACCESS_TOKEN = os.environ['TWITTER_ACCESS_TOKEN']
 TWITTER_ACCESS_TOKEN_SECRET = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
 TWITTER_TEXT = os.environ['TWITTER_TEXT']
 
+# # KILL SWITCH
+# def kill_switch():
+
+#     # Simple operation for Kubernetes postStop hook
+#     if os.path.exists("/kill_switch"):
+#         print("Stop processing due to kill switch.")
+#         sys.exit(1)
+
 # Authenticate with Twitter
 auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
 auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
