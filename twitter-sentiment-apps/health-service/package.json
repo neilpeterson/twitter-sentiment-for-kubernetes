@@ -6,7 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "author": "Jessica Deen",
+    "author": "Neil Peterson",
     "license": "MIT",
     "dependencies": {
         "figlet": "1.1.0"
