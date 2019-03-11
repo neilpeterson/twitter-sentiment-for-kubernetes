@@ -14,14 +14,6 @@ COSMOS_DB_COLLECTION = os.environ['COSMOS_DB_COLLECTION']
 # Chart label - static for now, will update to somethign dynamic
 CHART_LABEL = os.environ['CHART_LABEL']
 
-# KILL SWITCH
-# def kill_switch():
-
-#     # Simple operation for Kubernetes postStop hook
-#     if os.path.exists("/kill_switch"):
-#         print("Stop processing due to kill switch.")
-#         sys.exit(1)
-
 # Set chart title
 if "CHART_LABEL" in os.environ:
     chart_title = "Tweets about " + CHART_LABEL
