@@ -14,6 +14,14 @@ COSMOS_DB_COLLECTION = os.environ['COSMOS_DB_COLLECTION']
 # Chart label - static for now, will update to somethign dynamic
 CHART_LABEL = os.environ['CHART_LABEL']
 
+# KILL SWITCH
+# def kill_switch():
+
+#     # Simple operation for Kubernetes postStop hook
+#     if os.path.exists("/kill_switch"):
+#         print("Stop processing due to kill switch.")
+#         sys.exit(1)
+
 # Set chart title
 if "CHART_LABEL" in os.environ:
     chart_title = "Tweets about " + CHART_LABEL
@@ -50,7 +58,7 @@ def index():
     pie_chart.title = chart_title
     pie_chart.add('Positive',positive)
     pie_chart.add('Neutral',neutral)
-    pie_chart.add('Negative', negative)    
+    pie_chart.add('Negative', negative)
     graph = pie_chart.render_data_uri()
     return render_template("index.html", graph_data = graph)
 
