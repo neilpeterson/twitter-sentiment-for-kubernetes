@@ -28,10 +28,9 @@ az storage queue create --name $AZURE_STORAGE_ACCT --account-name $AZURE_STORAGE
 az cosmosdb create --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP
 
 # Create Congnitive Services API
-TEMPLATE_FILE=https://raw.githubusercontent.com/neilpeterson/twitter-sentiment-quick-start/master/build-twitter-sentiment-kubernetes.sh
-az group deployment create --name $AZURE_ANALYTICS --resource-group $AZURE_RESOURCE_GROUP --template-uri $TEMPLATE_FILE --parameters text_sentiment_api=$AZURE_ANALYTICS
+az cognitiveservices account create --name mytwittersentiment --resource-group $AZURE_RESOURCE_GROUP --kind TextAnalytics --sku S1 --location eastus
 
-# # Get endpoints and keys
+# Get endpoints and keys
 AZURE_QUEUE_KEY=$(az storage account keys list --account-name $AZURE_STORAGE_ACCT --resource-group $AZURE_RESOURCE_GROUP --query [0].value -o tsv)
 COSMOS_DB_ENDPOINT=$(az cosmosdb show --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP --query documentEndpoint -o tsv)
 COSMOS_DB_MASTERKEY=$(az cosmosdb list-keys --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP --query primaryMasterKey -o tsv)
