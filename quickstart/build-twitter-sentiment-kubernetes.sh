@@ -7,10 +7,10 @@ TWITTER_ACCESS_TOKEN=<replace>
 TWITTER_ACCESS_TOKEN_SECRET=<replace>
 
 # Twitter search term - used to filter returned tweets.
-TWITTER_TEXT=Seattle
+TWITTER_TEXT=punk
 
 # Names for the Azure Resource Group, Storage Account, and Cosmos DB name.
-AZURE_RESOURCE_GROUP=mytwittersentiment
+AZURE_RESOURCE_GROUP=tweet001
 AZURE_STORAGE_ACCT=mytwittersentiment$RANDOM
 AZURE_COSMOS_DB=mytwittersentiment$RANDOM
 AZURE_ANALYTICS=mytwittersentiment
@@ -34,7 +34,7 @@ az cognitiveservices account create --name mytwittersentiment --resource-group $
 AZURE_QUEUE_KEY=$(az storage account keys list --account-name $AZURE_STORAGE_ACCT --resource-group $AZURE_RESOURCE_GROUP --query [0].value -o tsv)
 COSMOS_DB_ENDPOINT=$(az cosmosdb show --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP --query documentEndpoint -o tsv)
 COSMOS_DB_MASTERKEY=$(az cosmosdb list-keys --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP --query primaryMasterKey -o tsv)
-AZURE_ANALYTICS_ENDPOINT=$(az cognitiveservices account show --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query endpoint -o tsv)/sentiment
+AZURE_ANALYTICS_ENDPOINT=$(az cognitiveservices account show --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query endpoint -o tsv)
 AZURE_ANALYTICS_KEY=$(az cognitiveservices account keys list --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query key1 -o tsv)
 
 # Create Twitter Sentiment Manifest
@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
       - name: process-tweet
-        image: neilpeterson/process-tweet
+        image: neilpeterson/process-tweet:v2
         env:
         - name: AZURE_ANALYTICS_URI
           value: $AZURE_ANALYTICS_ENDPOINT
@@ -91,7 +91,7 @@ spec:
     spec:
       containers:
       - name: get-tweet
-        image: neilpeterson/get-tweet
+        image: neilpeterson/get-tweet:v2
         env:
         - name: AZURE_STORAGE_ACCT
           value: $AZURE_STORAGE_ACCT
@@ -124,7 +124,7 @@ spec:
     spec:
       containers:
       - name: chart-tweet
-        image: neilpeterson/chart-tweet
+        image: neilpeterson/chart-tweet:v2
         env:
         - name: COSMOS_DB_ENDPOINT
           value: $COSMOS_DB_ENDPOINT
@@ -202,7 +202,7 @@ cat <<EOF > docker-compose.yml
 version: '3'
 services:
   get-tweet:
-    image: neilpeterson/get-tweet
+    image: neilpeterson/get-tweet:v2
     container_name: get-tweet
     environment:
       AZURE_STORAGE_ACCT: $AZURE_STORAGE_ACCT
@@ -214,7 +214,7 @@ services:
       TWITTER_ACCESS_TOKEN_SECRET: $TWITTER_ACCESS_TOKEN_SECRET
       TWITTER_TEXT: $TWITTER_TEXT
   process-tweet:
-    image: neilpeterson/process-tweet
+    image: neilpeterson/process-tweet:v2
     container_name: process-tweet
     environment:
       AZURE_ANALYTICS_URI: $AZURE_ANALYTICS_ENDPOINT
@@ -227,7 +227,7 @@ services:
       COSMOS_DB_DATABASE: $AZURE_COSMOS_DB
       COSMOS_DB_COLLECTION: $AZURE_COSMOS_DB
   chart-tweet:
-    image: neilpeterson/chart-tweet
+    image: neilpeterson/chart-tweet:v2
     container_name: chart-tweet
     environment:
       COSMOS_DB_ENDPOINT: $COSMOS_DB_ENDPOINT

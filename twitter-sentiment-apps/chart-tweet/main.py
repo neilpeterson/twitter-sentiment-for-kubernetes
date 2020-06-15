@@ -36,21 +36,24 @@ def index():
     positive = 0
     neutral = 0
     negative = 0
+    mixed = 0
 
     for doc in docs:
-        if isinstance(doc['sentiment'], float):
-            if doc['sentiment'] >= .67:
-                positive += 1
-            elif (doc['sentiment'] >=.34 and doc['sentiment'] < .66):
-                neutral += 1
-            elif doc['sentiment'] < .34:
-                negative +=1
+        if doc['sentiment'] == 'positive':
+            positive += 1
+        elif (doc['sentiment'] == 'neutral'):
+            neutral += 1
+        elif doc['sentiment'] == 'negative':
+            negative +=1
+        elif doc['sentiment'] == 'mixed':
+            mixed +=1
 
     pie_chart = pygal.Pie(style=BlueStyle, print_values=True)
     pie_chart.title = chart_title
     pie_chart.add('Positive',positive)
     pie_chart.add('Neutral',neutral)
     pie_chart.add('Negative', negative)
+    pie_chart.add('Mixed', mixed)
     graph = pie_chart.render_data_uri()
     return render_template("index.html", graph_data = graph)
 
