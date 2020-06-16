@@ -1,0 +1,131 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aksName": {
+            "type": "string",
+            "defaultValue": "nepetersaks001"
+        },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue": "nepetersstor001"
+        },
+        "cosmosName": {
+            "type": "string",
+            "defaultValue": "nepeterscosmos001"
+        },
+        "cognitiveName": {
+            "type": "string",
+            "defaultValue": "nepeterscog001"
+        },
+        "scriptIdentity": {
+            "type": "string",
+            "defaultValue": "scriptIdentity"
+        }
+    },
+    "variables": {
+        "location": "[resourceGroup().location]",
+        "script": ""
+    },
+    "resources": [
+        {
+            "name": "[parameters('aksName')]",
+            "type": "Microsoft.ContainerService/managedClusters",
+            "apiVersion": "2020-02-01",
+            "location": "[variables('location')]",
+            "properties": {
+                "kubernetesVersion": "1.15.7",
+                "dnsPrefix": "dnsprefix",
+                "agentPoolProfiles": [
+                    {
+                        "name": "agentpool",
+                        "count": 2,
+                        "vmSize": "Standard_A1",
+                        "osType": "Linux",
+                        "storageProfile": "ManagedDisks"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('storageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "location": "[variables('location')]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Premium"
+            }
+        },
+        {
+            "name": "[parameters('cosmosName')]",
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2019-12-12",
+            "location": "[variables('location')]",
+            "kind": "GlobalDocumentDB",
+            "properties": {
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Eventual",
+                    "maxStalenessPrefix": 1,
+                    "maxIntervalInSeconds": 5
+                },
+                "locations": [
+                    {
+                        "locationName": "[variables('location')]",
+                        "failoverPriority": 0
+                    }
+                ],
+                "databaseAccountOfferType": "Standard",
+                "enableAutomaticFailover": true,
+                "capabilities": [
+                    {
+                        "name": "EnableTable"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('cognitiveName')]",
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "location": "[variables('location')]",
+            "sku": {
+                "name": "S"
+            },
+            "kind": "TextAnalytics",
+            "properties": {
+                "customSubDomainName": "[parameters('cognitiveName')]",
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "name": "managedIdentity1",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2018-11-30",
+            "location": "[variables('location')]"
+        },
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "runPowerShellInline",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {"[parameters('scriptIdentity')]": {}}
+            },
+            "properties": {
+                "forceUpdateTag": "1",
+                "azPowerShellVersion": "3.0",
+                "arguments": "[concat('-aksCluster ', parameters('aksName'), ' -aksResourceGroup ', resourceGroup().name, ' -storageAccountName ', parameters('storageAccountName'))]",
+                "primaryScriptUri": "[variables('script')]",
+                "timeout": "PT30M",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
