@@ -1,44 +1,3 @@
-{{- if ne .Values.consumerKey "controll"}}
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ .Values.twitterSecretName }}
-  labels:
-    app: {{ .Release.Name }}
-type: Opaque
-data:
-  consumerKey: {{ .Values.consumerKey | b64enc }}
-  consumerSecret: {{ .Values.consumerSecret | b64enc }}
-  accessToken: {{ .Values.accessToken | b64enc }}
-  accessTokenSecret: {{ .Values.accessTokenSecret | b64enc }}
-{{- end}}
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: {{ .Release.Name }}-tweet-sentiment-storage
-  namespace: default
-  labels:
-    app: {{ .Release.Name }}
-spec:
-  clusterServiceClassExternalName: azure-storage-general-purpose-v2-storage-account
-  clusterServicePlanExternalName: account
-  parameters:
-    location: eastus
-    resourceGroup: {{ .Values.resourceGroup }}
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceBinding
-metadata:
-  name: {{ .Release.Name }}-tweet-sentiment-storage
-  namespace: default
-  labels:
-    app: {{ .Release.Name }}
-spec:
-  instanceRef:
-    name: {{ .Release.Name }}-tweet-sentiment-storage
-  secretName: {{ .Release.Name }}-tweet-sentiment-storage
----
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -57,97 +16,22 @@ spec:
         image: {{ .Values.imageRegistry }}/get-tweet:{{ .Values.imageVersion }}
         env:
         - name: AZURE_QUEUE
-          value: mytwittersentiment
+          value: {{ .Values.AZURE_QUEUE }}
         - name: TWITTER_CONSUMER_KEY
-          valueFrom:
-            secretKeyRef:
-              key: consumerKey
-              name: {{ .Values.twitterSecretName }}
+          value: {{ .Values.TWITTER_CONSUMER_KEY }}
         - name: TWITTER_CONSUMER_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: consumerSecret
-              name: {{ .Values.twitterSecretName }}
+          value: {{ .Values.TWITTER_CONSUMER_SECRET }}
         - name: TWITTER_ACCESS_TOKEN
-          valueFrom:
-            secretKeyRef:
-              key: accessToken
-              name: {{ .Values.twitterSecretName }}
+          value: {{ .Values.TWITTER_ACCESS_TOKEN }}
         - name: TWITTER_ACCESS_TOKEN_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: accessTokenSecret
-              name: {{ .Values.twitterSecretName }}
+          value: {{ .Values.TWITTER_ACCESS_TOKEN_SECRET }}
         - name: TWITTER_TEXT
-          value: {{ .Values.filterText }}
+          value: {{ .Values.TWITTER_TEXT }}
         - name: AZURE_STORAGE_ACCT
-          valueFrom:
-            secretKeyRef:
-              key: storageAccountName
-              name: {{ .Release.Name }}-tweet-sentiment-storage
+          value: {{ .Values.AZURE_STORAGE_ACCT }}
         - name: AZURE_QUEUE_KEY
-          valueFrom:
-            secretKeyRef:
-              key: accessKey
-              name: {{ .Release.Name }}-tweet-sentiment-storage
+          value: {{ .Values.AZURE_QUEUE_KEY }}
       terminationGracePeriodSeconds: 0
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: {{ .Release.Name }}-tweet-sentiment-analytics
-  namespace: default
-  labels:
-    app: {{ .Release.Name }}
-spec:
-  clusterServiceClassExternalName: azure-text-analytics
-  clusterServicePlanExternalName: {{ .Values.plan }}
-  parameters:
-    location: eastus
-    resourceGroup: {{ .Values.resourceGroup }}
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceBinding
-metadata:
-  name: {{ .Release.Name }}-tweet-sentiment-analytics
-  namespace: default
-  labels:
-    app: {{ .Release.Name }}
-spec:
-  instanceRef:
-    name: {{ .Release.Name }}-tweet-sentiment-analytics
-  secretName: {{ .Release.Name }}-tweet-sentiment-analytics
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: {{ .Release.Name }}-tweet-sentiment-cosmos
-  namespace: default
-  labels:
-    app: {{ .Release.Name }}
-spec:
-  clusterServiceClassExternalName: azure-cosmosdb-sql
-  clusterServicePlanExternalName: sql-api
-  parameters:
-    location: eastus
-    resourceGroup: {{ .Values.resourceGroup }}
-    {{- if .Values.minikube}}
-    ipFilters:
-      allowedIPRanges:
-        - 0.0.0.0/0
-    {{- end}}
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceBinding
-metadata:
-  name: {{ .Release.Name }}-tweet-sentiment-cosmos
-  namespace: default
-  labels:
-    app: {{ .Release.Name }}
-spec:
-  instanceRef:
-    name: {{ .Release.Name }}-tweet-sentiment-cosmos
-  secretName: {{ .Release.Name }}-tweet-sentiment-cosmos
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
@@ -167,41 +51,23 @@ spec:
         image: {{ .Values.imageRegistry }}/process-tweet:{{ .Values.imageVersion }}
         env:
         - name: AZURE_ANALYTICS_URI
-          valueFrom:
-            secretKeyRef:
-              key: textAnalyticsEndpoint
-              name: {{ .Release.Name }}-tweet-sentiment-analytics
+          value: {{ .Values.AZURE_ANALYTICS_URI }}
         - name: AZURE_ANALYTICS_KEY
-          valueFrom:
-            secretKeyRef:
-              key: textAnalyticsKey
-              name: {{ .Release.Name }}-tweet-sentiment-analytics
+          value: {{ .Values.AZURE_ANALYTICS_KEY }}
         - name: AZURE_STORAGE_ACCT
-          valueFrom:
-            secretKeyRef:
-              key: storageAccountName
-              name: {{ .Release.Name }}-tweet-sentiment-storage
+          value: {{ .Values.AZURE_STORAGE_ACCT }}
         - name: AZURE_QUEUE_KEY
-          valueFrom:
-            secretKeyRef:
-              key: accessKey
-              name: {{ .Release.Name }}-tweet-sentiment-storage
+          value: {{ .Values.AZURE_QUEUE_KEY }}
         - name: AZURE_QUEUE
-          value: mytwittersentiment
+          value: {{ .Values.AZURE_QUEUE }}
         - name: COSMOS_DB_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              key: uri
-              name: {{ .Release.Name }}-tweet-sentiment-cosmos
+          value: {{ .Values.COSMOS_DB_ENDPOINT }}
         - name: COSMOS_DB_MASTERKEY
-          valueFrom:
-            secretKeyRef:
-              key: primaryKey
-              name: {{ .Release.Name }}-tweet-sentiment-cosmos
+          value: {{ .Values.COSMOS_DB_MASTERKEY }}
         - name:  COSMOS_DB_DATABASE
-          value: mytwittersentiment
+          value: {{ .Values.COSMOS_DB_DATABASE }}
         - name:  COSMOS_DB_COLLECTION
-          value: mytwittersentiment
+          value: {{ .Values.COSMOS_DB_COLLECTION }}
         lifecycle:
           preStop:
               exec:
@@ -226,21 +92,15 @@ spec:
         image: {{ .Values.imageRegistry }}/chart-tweet:{{ .Values.imageVersion }}
         env:
         - name: COSMOS_DB_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              key: uri
-              name: {{ .Release.Name }}-tweet-sentiment-cosmos
+          value: {{ .Values.COSMOS_DB_ENDPOINT }}
         - name: COSMOS_DB_MASTERKEY
-          valueFrom:
-            secretKeyRef:
-              key: primaryKey
-              name: {{ .Release.Name }}-tweet-sentiment-cosmos
+          value: {{ .Values.COSMOS_DB_MASTERKEY }}
         - name:  COSMOS_DB_DATABASE
-          value: mytwittersentiment
+          value: {{ .Values.COSMOS_DB_DATABASE }}
         - name:  COSMOS_DB_COLLECTION
-          value: mytwittersentiment
+          value: {{ .Values.COSMOS_DB_COLLECTION }}
         - name:  CHART_LABEL
-          value: {{ .Values.filterText }}
+          value: {{ .Values.CHART_LABEL }}
 ---
 apiVersion: v1
 kind: Service

@@ -1,19 +1,21 @@
-# Twitter API authentication
-twitterSecretName: twitter-api
-
-# If consumerKey = controll a secret is not created
-# and it assumed that a pre-created secret exsists
-# with a the .Values.secret-name specified here.
-consumerKey: controll
-consumerSecret: null
-accessToken: null
-accessTokenSecret: null
-filterText: null
+# Twitter
+TWITTER_CONSUMER_KEY:
+TWITTER_CONSUMER_SECRET:
+TWITTER_ACCESS_TOKEN:
+TWITTER_ACCESS_TOKEN_SECRET:
+TWITTER_TEXT:
 
 # Azure
-plan: standard-s1
-resourceGroup: twitter-sentiment
+AZURE_QUEUE:
+AZURE_STORAGE_ACCT:
+AZURE_QUEUE_KEY:
+AZURE_ANALYTICS_URI:
+AZURE_ANALYTICS_KEY:
+COSMOS_DB_ENDPOINT:
+COSMOS_DB_MASTERKEY:
+COSMOS_DB_DATABASE:
+COSMOS_DB_COLLECTION:
 
 # Images
-imageRegistry: null
-imageVersion: null
+imageRegistry: neilpeterson
+imageVersion: v2
