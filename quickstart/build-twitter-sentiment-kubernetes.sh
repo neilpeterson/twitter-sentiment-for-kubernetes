@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Twitter API Endpoint and Credentials - this is not automated so must be specified.
-TWITTER_CONSUMER_KEY=<replace>
-TWITTER_CONSUMER_SECRET=<replace>
-TWITTER_ACCESS_TOKEN=<replace>
-TWITTER_ACCESS_TOKEN_SECRET=<replace>
+TWITTER_CONSUMER_KEY=S1juYjQD9bH0i3dDxEOv2g7wE
+TWITTER_CONSUMER_SECRET=HHjLe1zZz9ydAZVbYurQRv8A8w4aAZbmqQqwBHFeyoAnsp9zI4
+TWITTER_ACCESS_TOKEN=556115100-Ro1DeIXdETYSipNYqYKWtmiYxBjYE1rklSqBvJCA
+TWITTER_ACCESS_TOKEN_SECRET=TJGILhrfqgotHB2RS27al1ryDc39qLhtdAObzMMgwdzs5
 
 # Twitter search term - used to filter returned tweets.
 TWITTER_TEXT=Seattle
 
 # Names for the Azure Resource Group, Storage Account, and Cosmos DB name.
-AZURE_RESOURCE_GROUP=tweet001
+AZURE_RESOURCE_GROUP=tweet002
 AZURE_STORAGE_ACCT=mytwittersentiment$RANDOM
 AZURE_COSMOS_DB=mytwittersentiment$RANDOM
 AZURE_ANALYTICS=mytwittersentiment

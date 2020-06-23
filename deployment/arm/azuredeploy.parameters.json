@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aksName": {
+            "value": "nepetersaks002"
+        },
+        "storageAccountName": {
+            "value": "nepetersstor002"
+        },
+        "cognitiveName": {
+            "value": "nepeterscog002"
+        },
+        "scriptIdentity": {
+            "value": "scriptIdentity"
+        },
+        "cosmosName": {
+            "value": "nepeterscosmos002" 
+        }
+    }
+}

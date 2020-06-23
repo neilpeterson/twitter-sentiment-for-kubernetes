@@ -1,0 +1,38 @@
+version: '3'
+services:
+  get-tweet:
+    image: neilpeterson/get-tweet:v2
+    container_name: get-tweet
+    environment:
+      AZURE_STORAGE_ACCT: mytwittersentiment18003
+      AZURE_QUEUE: mytwittersentiment18003
+      AZURE_QUEUE_KEY: rweWm6OeFX9NugcYB7+eorZZJu675luLmk84+sBt01RtEEBAeSjbfcC/tagDU+ME7UtIys/Fe3cKHzevS5ZlmQ==
+      TWITTER_CONSUMER_KEY: S1juYjQD9bH0i3dDxEOv2g7wE
+      TWITTER_CONSUMER_SECRET: HHjLe1zZz9ydAZVbYurQRv8A8w4aAZbmqQqwBHFeyoAnsp9zI4
+      TWITTER_ACCESS_TOKEN: 556115100-Ro1DeIXdETYSipNYqYKWtmiYxBjYE1rklSqBvJCA
+      TWITTER_ACCESS_TOKEN_SECRET: TJGILhrfqgotHB2RS27al1ryDc39qLhtdAObzMMgwdzs5
+      TWITTER_TEXT: Seattle
+  process-tweet:
+    image: neilpeterson/process-tweet:v2
+    container_name: process-tweet
+    environment:
+      AZURE_ANALYTICS_URI: https://eastus.api.cognitive.microsoft.com/
+      AZURE_ANALYTICS_KEY: f08a4fc968b643c7b160caf49bd14551
+      AZURE_STORAGE_ACCT: mytwittersentiment18003
+      AZURE_QUEUE: mytwittersentiment18003
+      AZURE_QUEUE_KEY: rweWm6OeFX9NugcYB7+eorZZJu675luLmk84+sBt01RtEEBAeSjbfcC/tagDU+ME7UtIys/Fe3cKHzevS5ZlmQ==
+      COSMOS_DB_ENDPOINT: https://mytwittersentiment10442.documents.azure.com:443/
+      COSMOS_DB_MASTERKEY: qEBkCielDGnbx7ur3ShI3hP10cO2KDyc1BV18wsikG2DhLg268ky0GGGE7ZCXCkx3fjIOIFKUsOpkrrVoj3i9w==
+      COSMOS_DB_DATABASE: mytwittersentiment10442
+      COSMOS_DB_COLLECTION: mytwittersentiment10442
+  chart-tweet:
+    image: neilpeterson/chart-tweet:v2
+    container_name: chart-tweet
+    environment:
+      COSMOS_DB_ENDPOINT: https://mytwittersentiment10442.documents.azure.com:443/
+      COSMOS_DB_MASTERKEY: qEBkCielDGnbx7ur3ShI3hP10cO2KDyc1BV18wsikG2DhLg268ky0GGGE7ZCXCkx3fjIOIFKUsOpkrrVoj3i9w==
+      COSMOS_DB_DATABASE: mytwittersentiment10442
+      COSMOS_DB_COLLECTION: mytwittersentiment10442
+      CHART_LABEL: Seattle
+    ports:
+      - "8080:80"
