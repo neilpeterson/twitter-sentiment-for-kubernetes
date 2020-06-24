@@ -3,19 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "aksName": {
-            "value": "nepetersaks004"
+            "value": "nepetersaks006"
         },
         "storageAccountName": {
-            "value": "nepetersstor004"
+            "value": "nepetersstor006"
         },
         "cognitiveName": {
-            "value": "nepeterscog004"
+            "value": "nepeterscog006"
         },
         "scriptIdentity": {
             "value": "scriptIdentity"
         },
         "cosmosName": {
-            "value": "nepeterscosmos004" 
+            "value": "nepeterscosmos006" 
         }
     }
 }
