@@ -41,3 +41,15 @@ stages:
     pool: Hosted Ubuntu 1604
     continueOnError: false
     timeoutInMinutes: 20
+
+- stage: infrastructure_pre_production
+  dependsOn: build
+
+- stage: app_pre_production
+  dependsOn: infrastructure_pre_production
+
+- stage: infrastructure_pre_production
+  dependsOn: build
+
+- stage: app_pre_production
+  dependsOn: infrastructure_pre_production
