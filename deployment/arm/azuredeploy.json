@@ -104,46 +104,46 @@
             "apiVersion": "2018-11-30",
             "name": "[parameters('scriptIdentity')]",
             "location": "[variables('location')]"
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2018-09-01-preview",
-            "name": "[guid(resourceGroup().id)]",
-            "properties": {
-                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                "principalId": "[reference(parameters('scriptIdentity')).principalId]",
-                "scope": "[resourceGroup().id]",
-                "principalType": "ServicePrincipal"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('scriptIdentity'))]"
-            ]
-        },
-        {
-            "type": "Microsoft.Resources/deploymentScripts",
-            "apiVersion": "2019-10-01-preview",
-            "name": "runPowerShellInline",
-            "location": "[resourceGroup().location]",
-            "kind": "AzurePowerShell",
-            "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('scriptIdentity'))]": { }
-                }
-            },
-            "properties": {
-                "forceUpdateTag": "1",
-                "azPowerShellVersion": "3.0",
-                "arguments": "[concat('-aksCluster ', parameters('aksName'), ' -aksResourceGroup ', resourceGroup().name, ' -storageAccountName ', parameters('storageAccountName'))]",
-                "primaryScriptUri": "[variables('script')]",
-                "timeout": "PT30M",
-                "cleanupPreference": "OnSuccess",
-                "retentionInterval": "P1D"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Authorization/roleAssignments',guid(resourceGroup().id))]"
-            ]
         }
+        // {
+        //     "type": "Microsoft.Authorization/roleAssignments",
+        //     "apiVersion": "2018-09-01-preview",
+        //     "name": "[guid(resourceGroup().id)]",
+        //     "properties": {
+        //         "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        //         "principalId": "[reference(parameters('scriptIdentity')).principalId]",
+        //         "scope": "[resourceGroup().id]",
+        //         "principalType": "ServicePrincipal"
+        //     },
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('scriptIdentity'))]"
+        //     ]
+        // },
+        // {
+        //     "type": "Microsoft.Resources/deploymentScripts",
+        //     "apiVersion": "2019-10-01-preview",
+        //     "name": "runPowerShellInline",
+        //     "location": "[resourceGroup().location]",
+        //     "kind": "AzurePowerShell",
+        //     "identity": {
+        //         "type": "UserAssigned",
+        //         "userAssignedIdentities": {
+        //             "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('scriptIdentity'))]": { }
+        //         }
+        //     },
+        //     "properties": {
+        //         "forceUpdateTag": "1",
+        //         "azPowerShellVersion": "3.0",
+        //         "arguments": "[concat('-aksCluster ', parameters('aksName'), ' -aksResourceGroup ', resourceGroup().name, ' -storageAccountName ', parameters('storageAccountName'))]",
+        //         "primaryScriptUri": "[variables('script')]",
+        //         "timeout": "PT30M",
+        //         "cleanupPreference": "OnSuccess",
+        //         "retentionInterval": "P1D"
+        //     },
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.Authorization/roleAssignments',guid(resourceGroup().id))]"
+        //     ]
+        // }
     ],
     "outputs": { }
 }
