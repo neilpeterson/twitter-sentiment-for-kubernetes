@@ -1,0 +1,137 @@
+// mandatory params
+parameter dnsPrefix string
+
+parameter aksName string {
+    minValue: 1
+    maxValue: 63   
+}
+
+parameter cognitiveName string {
+    minValue: 2
+    maxValue: 64   
+}
+
+parameter cosmosName string {
+    minValue: 3
+    maxValue: 44
+}
+
+parameter storageAccountName string {
+    minValue: 3
+    maxValue: 24
+}
+
+// optional params
+parameter aksVersion string = '1.16.9'
+parameter location string = resourceGroup().location
+parameter script string = 'https://raw.githubusercontent.com/neilpeterson/twitter-sentiment-for-kubernetes/arm-template/deployment/arm/deploymentScript.ps1'
+parameter scriptIdentityName string 'scriptIdentity'
+parameter ci bool = false
+
+resource aks 'Microsoft.ContainerService/managedClusters@2020-03-01' = {
+    name: aksName
+    location: location
+    properties: {
+        kubernetesVersion: aksVersion
+        dnsPrefix: dnsPrefix
+        agentPoolProfiles: [
+            {
+                name: 'agentpool'
+                count: 2
+                vmSize: 'Standard_DS3_v2'
+                osType: 'Linux'
+                storageProfile: 'ManagedDisks'
+            }
+        ]
+    }
+    identity {
+        type: 'SystemAssigned'
+    }
+}
+
+resource aks 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+    name: storageAccountName
+    location: location
+    kind: 'StorageV2'
+    sku {
+        name: 'Standard_LRS'
+        tier: 'Standard'
+    }
+}
+
+resource aks 'Microsoft.DocumentDB/databaseAccounts@2019-12-12' = {
+    name: cosmosName
+    location: location
+    kind: GlobalDocumentDB
+    properties: {
+        consistencyPolicy {
+            defaultConsistencyLevel: 'Eventual'
+            maxStalenessPrefix: 1
+            maxIntervalInSeconds: 5
+        }
+        locations: [
+            {
+                locationName: location
+                failoverPriority: 0
+            }
+        ]
+        databaseAccountOfferType: 'Standard'
+        enableAutomaticFailover: true
+        capabilities [
+            {
+                name: 'EnableTable'
+            }
+        ]
+    }
+}
+
+resource cogsvc 'Microsoft.CognitiveServices/accounts@2017-04-18' = {
+    name: cognitiveName
+    location: location
+    sku {
+        name: 'S'
+    }
+    kind: TextAnalytics
+    properties {
+        customSubDomainName: cognitiveName
+        publicNetworkAccess: 'Enabled'
+    }
+}
+
+resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
+    name: scriptIdentityName
+    location: location
+}
+
+// How would I reference the 'identity' resource and return a reference property?
+// Is the dependency implied because of the reference?
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2018-09-01-preview' = {
+    name: guid(resourceGroup().id
+    properties: reference(identity).principalId
+    scope: resourceGroup().id
+    principalType: 'ServicePrincipal'
+}
+
+// Does internal resource name = resourceId(type, name)?
+// I have a dependcy here but no refernce to dependant resource. How to add dependency?
+// Would add a condition here: 'when !(ci)'
+resource identity 'Microsoft.Resources/deploymentScripts@2019-10-01-preview' = {
+    name: 'runPowerShellInline'
+    location: location
+    kind: 'AzurePowerShell'
+    identity: {
+        type: 'UserAssigned'
+        userAssignedIdentities: {
+            identity: {} // reference to identity resource
+        }
+    }
+    properties: {
+        forceUpdateTag: '1'
+        azPowerShellVersion: '3.0'
+        arguments: concat('-aksCluster ', parameters('aksName'), ' -aksResourceGroup ', resourceGroup().name, ' -storageAccountName ', parameters('storageAccountName'))
+        primaryScriptUri: script
+        timeout: 'PT30M'
+        cleanupPreference: 'OnSuccess'
+        retentionInterval: 'P1D'
+    }
+}
