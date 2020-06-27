@@ -1,0 +1,43 @@
+trigger:
+- master
+
+pr:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+
+  # Azure
+  azureSubscription: azure-service-connection
+
+stages:
+
+- stage: test
+
+  jobs:
+  - job: tests
+    pool: Hosted Ubuntu 1604
+    continueOnError: false
+    timeoutInMinutes: 20
+
+    steps:
+
+    # Temp test, replace this with ARM TTK / Python Test Suite?
+    - task: PowerShell@2
+      displayName: Install Pester
+      inputs:
+        targetType: 'inline'
+        script: |
+          Find-Module pester | Install-Module -Force
+
+- stage: build
+  dependsOn: test
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+  jobs:
+  - job: helm
+    pool: Hosted Ubuntu 1604
+    continueOnError: false
+    timeoutInMinutes: 20
