@@ -45,11 +45,30 @@ stages:
 - stage: infrastructure_pre_production
   dependsOn: build
 
-- stage: app_pre_production
-  dependsOn: infrastructure_pre_production
+  jobs:
+  - job: arm
+    pool: Hosted Ubuntu 1604
+    continueOnError: false
 
-- stage: infrastructure_pre_production
-  dependsOn: build
+    steps:
 
-- stage: app_pre_production
-  dependsOn: infrastructure_pre_production
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'azure-service-connection'
+        subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'test123'
+        location: 'East US'
+        templateLocation: 'Linked artifact'
+        csmFile: './deployment/arm/azuredeploy.json'
+        deploymentMode: 'Incremental'
+
+# - stage: app_pre_production
+#   dependsOn: infrastructure_pre_production
+
+# - stage: infrastructure_pre_production
+#   dependsOn: build
+
+# - stage: app_pre_production
+#   dependsOn: infrastructure_pre_production
