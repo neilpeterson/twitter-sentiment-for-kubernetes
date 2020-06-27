@@ -62,6 +62,7 @@ stages:
         location: 'East US'
         templateLocation: 'Linked artifact'
         csmFile: './deployment/arm/azuredeploy.json'
+        csmParametersFile: './deployment/arm/azuredeploy.parameters.json'
         deploymentMode: 'Incremental'
 
 # - stage: app_pre_production
