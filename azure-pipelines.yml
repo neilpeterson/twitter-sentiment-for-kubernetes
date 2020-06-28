@@ -55,16 +55,16 @@ stages:
           scriptLocation: inlineScript
           inlineScript: 'az acr login --name $(containerRegistryName)'
 
-      - task: HelmInstaller@1
-        inputs:
-          helmVersionToInstall: 'latest'
+      # - task: HelmInstaller@1
+      #   inputs:
+      #     helmVersionToInstall: 'latest'
 
-      - task: HelmDeploy@0
-        displayName: 'helm init --client-only'
-        inputs:
-          connectionType: None
-          command: init
-          arguments: '--client-only'
+      # - task: HelmDeploy@0
+      #   displayName: 'helm init --client-only'
+      #   inputs:
+      #     connectionType: None
+      #     command: init
+      #     arguments: '--client-only'
 
       - task: HelmDeploy@0
         displayName: 'helm package (tt-cart)'
