@@ -185,7 +185,7 @@ stages:
       inputs:
         script: |
           echo "-------------------------------"
-          echo $(AZURE_ANALYTICS_KEY)
+          echo $AZURE_ANALYTICS_KEY
           echo "-------------------------------"
 
 # - stage: infrastructure_production
