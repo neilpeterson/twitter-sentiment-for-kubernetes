@@ -41,7 +41,7 @@ stages:
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   jobs:
-  - job: prepare-chart
+  - job: prepareChart
     pool: Hosted Ubuntu 1604
     continueOnError: false
     timeoutInMinutes: 20
