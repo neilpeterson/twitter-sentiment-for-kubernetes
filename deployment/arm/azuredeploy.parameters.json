@@ -15,7 +15,10 @@
             "value": "scriptIdentity"
         },
         "cosmosName": {
-            "value": "nepeterscosmos007" 
+            "value": "nepeterscosmos007"
+        },
+        "acrName": {
+            "value": "nepetersacr007"
         }
     }
 }

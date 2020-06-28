@@ -15,8 +15,10 @@
             "type": "string"
         },
         "scriptIdentity": {
-            "type": "string",
-            "defaultValue": "scriptIdentity"
+            "type": "string"
+        },
+        "acrName": {
+            "type": "string"
         }
     },
     "variables": {
@@ -98,6 +100,16 @@
                 "customSubDomainName": "[parameters('cognitiveName')]",
                 "publicNetworkAccess": "Enabled"
             }
+        },
+        {
+            "name": "[parameters('acrName')]",
+            "type": "Microsoft.ContainerRegistry/registries",
+            "apiVersion": "2019-05-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Classic"
+            },
+            "properties": {}
         },
         {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
