@@ -10,7 +10,8 @@ pool:
 variables:
 
   # Azure
-  azureSubscription: azure-service-connection
+  # azureSubscription: azure-service-connection
+  azureSubscription: azure-devops-managed-identity
 
 stages:
 
