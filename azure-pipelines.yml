@@ -13,8 +13,8 @@ variables:
   azureSubscription: azure-service-connection
 
   # Container Registry
-  AZURE_CONTAINER_REGISTRY: nepetersacr007
-  AZURE_CONTAINER_REGISTRY_FQDN: nepetersacr007.azurecr.io
+  AZURE_CONTAINER_REGISTRY: nepetersacr008
+  AZURE_CONTAINER_REGISTRY_FQDN: nepetersacr008.azurecr.io
   AZURE_MANAGED_IDENTITY_NAME: ninernep001
 
   AZURE_COG_SERVICES: ninernep002
