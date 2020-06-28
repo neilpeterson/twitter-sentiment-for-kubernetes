@@ -10,61 +10,94 @@ pool:
 variables:
 
   # Azure
-  # azureSubscription: azure-service-connection
-  azureSubscription: azure-devops-managed-identity
+  azureSubscription: azure-service-connection
+
+  # Container Registry
+  containerRegistryName: nepetersacr007
+  containerRegistryFqdn: nepetersacr007.azurecr.io
 
 stages:
 
-- stage: test
+# - stage: test
 
-  jobs:
-  - job: tests
-    pool: Hosted Ubuntu 1604
-    continueOnError: false
-    timeoutInMinutes: 20
+#   jobs:
+#   - job: tests
+#     pool: Hosted Ubuntu 1604
+#     continueOnError: false
+#     timeoutInMinutes: 20
 
-    steps:
+#     steps:
 
-    # Temp test, replace this with ARM TTK / Python Test Suite?
-    - task: PowerShell@2
-      displayName: Install Pester
-      inputs:
-        targetType: 'inline'
-        script: |
-          Find-Module pester | Install-Module -Force
+#     # Temp test, replace this with ARM TTK / Python Test Suite?
+#     - task: PowerShell@2
+#       displayName: Install Pester
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#           Find-Module pester | Install-Module -Force
 
 - stage: build
   dependsOn: test
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   jobs:
-  - job: helm
+  - job: prepare-chart
     pool: Hosted Ubuntu 1604
     continueOnError: false
     timeoutInMinutes: 20
 
-- stage: infrastructure_pre_production
-  dependsOn: build
-
-  jobs:
-  - job: arm
-    pool: Hosted Ubuntu 1604
-    continueOnError: false
-
     steps:
 
-    - task: AzureResourceManagerTemplateDeployment@3
-      inputs:
-        deploymentScope: 'Resource Group'
-        azureResourceManagerConnection: 'azure-service-connection'
-        subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
-        action: 'Create Or Update Resource Group'
-        resourceGroupName: 'twitter001'
-        location: 'East US'
-        templateLocation: 'Linked artifact'
-        csmFile: './deployment/arm/azuredeploy.json'
-        csmParametersFile: './deployment/arm/azuredeploy.parameters.json'
-        deploymentMode: 'Incremental'
+      - task: AzureCLI@1
+        displayName: 'AZ ACR Login'
+        inputs:
+          azureSubscription: $(azureSubscription)
+          scriptLocation: inlineScript
+          inlineScript: 'az acr login --name $(containerRegistryName)'
+
+      - task: HelmDeploy@0
+        displayName: 'helm init --client-only'
+        inputs:
+          connectionType: None
+          command: init
+          arguments: '--client-only'
+
+      - task: HelmDeploy@0
+        displayName: 'helm package (tt-cart)'
+        inputs:
+          command: package
+          chartPath: './deployment/helm-chart'
+          arguments: '--version $(Build.BuildId)'
+
+      - task: AzureCLI@1
+        displayName: 'AZ ACR helm push (tt-cart)'
+        inputs:
+          azureSubscription: $(azureSubscription)
+          scriptLocation: inlineScript
+          inlineScript: 'az acr helm push -n $(containerRegistryName) /home/vsts/work/1/a/cart-api-$(Build.BuildId).tgz'
+
+# - stage: infrastructure_pre_production
+#   dependsOn: build
+
+#   jobs:
+#   - job: arm
+#     pool: Hosted Ubuntu 1604
+#     continueOnError: false
+
+#     steps:
+
+#     - task: AzureResourceManagerTemplateDeployment@3
+#       inputs:
+#         deploymentScope: 'Resource Group'
+#         azureResourceManagerConnection: $(azureSubscription)
+#         subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
+#         action: 'Create Or Update Resource Group'
+#         resourceGroupName: 'twitter001'
+#         location: 'East US'
+#         templateLocation: 'Linked artifact'
+#         csmFile: './deployment/arm/azuredeploy.json'
+#         csmParametersFile: './deployment/arm/azuredeploy.parameters.json'
+#         deploymentMode: 'Incremental'
 
 # - stage: app_pre_production
 #   dependsOn: infrastructure_pre_production
