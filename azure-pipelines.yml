@@ -74,7 +74,7 @@ stages:
         displayName: 'helm package (tt-cart)'
         inputs:
           command: package
-          chartPath: './deployment/helm-chart'
+          chartPath: './deployment/helm-chart/twitter-sentiment'
           arguments: '--version $(Build.BuildId)'
 
       - task: AzureCLI@1
@@ -82,7 +82,7 @@ stages:
         inputs:
           azureSubscription: $(azureSubscription)
           scriptLocation: inlineScript
-          inlineScript: 'az acr helm push -n $(containerRegistryName) /home/vsts/work/1/a/cart-api-$(Build.BuildId).tgz'
+          inlineScript: 'az acr helm push -n $(containerRegistryName) /home/vsts/work/1/a/twitter-sentiment-$(Build.BuildId).tgz'
 
 # - stage: infrastructure_pre_production
 #   dependsOn: build
