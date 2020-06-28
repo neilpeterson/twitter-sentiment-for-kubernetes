@@ -118,32 +118,32 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('scriptIdentity'))]"
             ]
+        },
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "runPowerShellInline",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('scriptIdentity'))]": { }
+                }
+            },
+            "properties": {
+                "forceUpdateTag": "1",
+                "azPowerShellVersion": "3.0",
+                "arguments": "[concat('-aksCluster ', parameters('aksName'), ' -aksResourceGroup ', resourceGroup().name, ' -storageAccountName ', parameters('storageAccountName'))]",
+                "primaryScriptUri": "[variables('script')]",
+                "timeout": "PT30M",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Authorization/roleAssignments',guid(resourceGroup().id))]"
+            ]
         }
-        // {
-        //     "type": "Microsoft.Resources/deploymentScripts",
-        //     "apiVersion": "2019-10-01-preview",
-        //     "name": "runPowerShellInline",
-        //     "location": "[resourceGroup().location]",
-        //     "kind": "AzurePowerShell",
-        //     "identity": {
-        //         "type": "UserAssigned",
-        //         "userAssignedIdentities": {
-        //             "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('scriptIdentity'))]": { }
-        //         }
-        //     },
-        //     "properties": {
-        //         "forceUpdateTag": "1",
-        //         "azPowerShellVersion": "3.0",
-        //         "arguments": "[concat('-aksCluster ', parameters('aksName'), ' -aksResourceGroup ', resourceGroup().name, ' -storageAccountName ', parameters('storageAccountName'))]",
-        //         "primaryScriptUri": "[variables('script')]",
-        //         "timeout": "PT30M",
-        //         "cleanupPreference": "OnSuccess",
-        //         "retentionInterval": "P1D"
-        //     },
-        //     "dependsOn": [
-        //         "[resourceId('Microsoft.Authorization/roleAssignments',guid(resourceGroup().id))]"
-        //     ]
-        // }
     ],
     "outputs": { }
 }
