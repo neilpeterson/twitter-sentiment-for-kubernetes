@@ -41,7 +41,7 @@ stages:
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   jobs:
-  - job: prepareChart
+  - job: helm
     pool: Hosted Ubuntu 1604
     continueOnError: false
     timeoutInMinutes: 20
@@ -54,21 +54,6 @@ stages:
           azureSubscription: $(azureSubscription)
           scriptLocation: inlineScript
           inlineScript: 'az acr login --name $(containerRegistryName)'
-
-      # - task: HelmInstaller@1
-      #   inputs:
-      #     helmVersionToInstall: 'latest'
-
-      # - task: HelmDeploy@0
-      #   displayName: 'helm init --client-only'
-      #   inputs:
-      #     connectionType: None
-      #     command: init
-      #     arguments: '--client-only'
-
-      - task: CmdLine@2
-        inputs:
-          script: 'ls /home/vsts/work/1/s/deployment/helm-chart'
 
       - task: HelmDeploy@0
         displayName: 'helm package (tt-cart)'
@@ -83,6 +68,32 @@ stages:
           azureSubscription: $(azureSubscription)
           scriptLocation: inlineScript
           inlineScript: 'az acr helm push -n $(containerRegistryName) /home/vsts/work/1/a/twitter-sentiment-$(Build.BuildId).tgz'
+
+  - job: docker
+    pool: Hosted Ubuntu 1604
+    continueOnError: false
+    timeoutInMinutes: 20
+
+    steps:
+
+    - task: AzureCLI@1
+      displayName: 'AZ ACR Login'
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: inlineScript
+        inlineScript: 'az acr login --name $(containerRegistryName)'
+
+    - task: CmdLine@2
+      displayName: 'docker build (chart-tweet)'
+      inputs:
+        script: |
+          cd twitter-sentiment-apps/chart-tweet
+          docker build -t $(containerRegistryFqdn)/chart-tweet:$(Build.BuildId) .
+    - task: CmdLine@2
+      displayName: 'docker push (chart-tweet)'
+      inputs:
+        script: |
+          docker push $(containerRegistryFqdn)/cart.api:$(Build.BuildId)
 
 # - stage: infrastructure_pre_production
 #   dependsOn: build
