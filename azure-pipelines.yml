@@ -18,26 +18,26 @@ variables:
 
 stages:
 
-# - stage: test
+- stage: test
 
-#   jobs:
-#   - job: tests
-#     pool: Hosted Ubuntu 1604
-#     continueOnError: false
-#     timeoutInMinutes: 20
+  jobs:
+  - job: tests
+    pool: Hosted Ubuntu 1604
+    continueOnError: false
+    timeoutInMinutes: 20
 
-#     steps:
+    steps:
 
-#     # Temp test, replace this with ARM TTK / Python Test Suite?
-#     - task: PowerShell@2
-#       displayName: Install Pester
-#       inputs:
-#         targetType: 'inline'
-#         script: |
-#           Find-Module pester | Install-Module -Force
+    # Temp test, replace this with ARM TTK / Python Test Suite?
+    - task: PowerShell@2
+      displayName: Install Pester
+      inputs:
+        targetType: 'inline'
+        script: |
+          Find-Module pester | Install-Module -Force
 
 - stage: build
-  # dependsOn: test
+  dependsOn: test
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   jobs:
@@ -121,28 +121,28 @@ stages:
         script: |
           docker push $(containerRegistryFqdn)/process-tweet:$(Build.BuildId)
 
-# - stage: infrastructure_pre_production
-#   dependsOn: build
+- stage: infrastructure_pre_production
+  dependsOn: build
 
-#   jobs:
-#   - job: arm
-#     pool: Hosted Ubuntu 1604
-#     continueOnError: false
+  jobs:
+  - job: arm
+    pool: Hosted Ubuntu 1604
+    continueOnError: false
 
-#     steps:
+    steps:
 
-#     - task: AzureResourceManagerTemplateDeployment@3
-#       inputs:
-#         deploymentScope: 'Resource Group'
-#         azureResourceManagerConnection: $(azureSubscription)
-#         subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
-#         action: 'Create Or Update Resource Group'
-#         resourceGroupName: 'twitter001'
-#         location: 'East US'
-#         templateLocation: 'Linked artifact'
-#         csmFile: './deployment/arm/azuredeploy.json'
-#         csmParametersFile: './deployment/arm/azuredeploy.parameters.json'
-#         deploymentMode: 'Incremental'
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: $(azureSubscription)
+        subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'twitter001'
+        location: 'East US'
+        templateLocation: 'Linked artifact'
+        csmFile: './deployment/arm/azuredeploy.json'
+        csmParametersFile: './deployment/arm/azuredeploy.parameters.json'
+        deploymentMode: 'Incremental'
 
 # - stage: app_pre_production
 #   dependsOn: infrastructure_pre_production
