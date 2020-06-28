@@ -95,6 +95,32 @@ stages:
         script: |
           docker push $(containerRegistryFqdn)/chart-tweet:$(Build.BuildId)
 
+    - task: CmdLine@2
+      displayName: 'docker build (get-tweet)'
+      inputs:
+        script: |
+          cd twitter-sentiment-apps/get-tweet
+          docker build -t $(containerRegistryFqdn)/get-tweet:$(Build.BuildId) .
+
+    - task: CmdLine@2
+      displayName: 'docker push (get-tweet)'
+      inputs:
+        script: |
+          docker push $(containerRegistryFqdn)/get-tweet:$(Build.BuildId)
+
+    - task: CmdLine@2
+      displayName: 'docker build (process-tweet)'
+      inputs:
+        script: |
+          cd twitter-sentiment-apps/process-tweet
+          docker build -t $(containerRegistryFqdn)/process-tweet:$(Build.BuildId) .
+
+    - task: CmdLine@2
+      displayName: 'docker push (process-tweet)'
+      inputs:
+        script: |
+          docker push $(containerRegistryFqdn)/process-tweet:$(Build.BuildId)
+
 # - stage: infrastructure_pre_production
 #   dependsOn: build
 
