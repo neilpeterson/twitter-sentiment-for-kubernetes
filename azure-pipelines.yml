@@ -145,15 +145,6 @@ stages:
         azureResourceManagerConnection: $(azureSubscription)
         subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
         action: 'Create Or Update Resource Group'
-        resourceGroupName: 'twitter001'
-        location: 'East US'
-        templateLocation: 'Linked artifact'
-    - task: AzureResourceManagerTemplateDeployment@3
-      inputs:
-        deploymentScope: 'Resource Group'
-        azureResourceManagerConnection: '$(azureSubscription)'
-        subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
-        action: 'Create Or Update Resource Group'
         resourceGroupName: $(AZURE_RESOURCE_GROUP)
         location: 'East US'
         templateLocation: 'Linked artifact'
