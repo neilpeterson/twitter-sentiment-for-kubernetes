@@ -13,8 +13,16 @@ variables:
   azureSubscription: azure-service-connection
 
   # Container Registry
-  containerRegistryName: nepetersacr007
-  containerRegistryFqdn: nepetersacr007.azurecr.io
+  AZURE_CONTAINER_REGISTRY: nepetersacr007
+  AZURE_CONTAINER_REGISTRY_FQDN: nepetersacr007.azurecr.io
+  AZURE_MANAGED_IDENTITY_NAME: ninernep001
+
+  AZURE_COG_SERVICES: ninernep001
+  AZURE_KUBERNETES_SERVICE: ninernep001
+  AZURE_STORAGE_ACCT: ninernep001
+  AZURE_RESOURCE_GROUP: ninernep001
+  AZURE_COSMOS_DB: ninernep001
+  AZURE_ANALYTICS: ninernep001
 
 stages:
 
@@ -53,7 +61,7 @@ stages:
         inputs:
           azureSubscription: $(azureSubscription)
           scriptLocation: inlineScript
-          inlineScript: 'az acr login --name $(containerRegistryName)'
+          inlineScript: 'az acr login --name $(AZURE_CONTAINER_REGISTRY)'
 
       - task: HelmDeploy@0
         displayName: 'helm package (twitter-sentiment)'
@@ -67,7 +75,7 @@ stages:
         inputs:
           azureSubscription: $(azureSubscription)
           scriptLocation: inlineScript
-          inlineScript: 'az acr helm push -n $(containerRegistryName) /home/vsts/work/1/a/twitter-sentiment-$(Build.BuildId).tgz'
+          inlineScript: 'az acr helm push -n $(AZURE_CONTAINER_REGISTRY) /home/vsts/work/1/a/twitter-sentiment-$(Build.BuildId).tgz'
 
   - job: docker
     pool: Hosted Ubuntu 1604
@@ -81,45 +89,45 @@ stages:
       inputs:
         azureSubscription: $(azureSubscription)
         scriptLocation: inlineScript
-        inlineScript: 'az acr login --name $(containerRegistryName)'
+        inlineScript: 'az acr login --name $(AZURE_CONTAINER_REGISTRY)'
 
     - task: CmdLine@2
       displayName: 'docker build (chart-tweet)'
       inputs:
         script: |
           cd twitter-sentiment-apps/chart-tweet
-          docker build -t $(containerRegistryFqdn)/chart-tweet:$(Build.BuildId) .
+          docker build -t $(AZURE_CONTAINER_REGISTRY_FQDN)/chart-tweet:$(Build.BuildId) .
     - task: CmdLine@2
       displayName: 'docker push (chart-tweet)'
       inputs:
         script: |
-          docker push $(containerRegistryFqdn)/chart-tweet:$(Build.BuildId)
+          docker push $(AZURE_CONTAINER_REGISTRY_FQDN)/chart-tweet:$(Build.BuildId)
 
     - task: CmdLine@2
       displayName: 'docker build (get-tweet)'
       inputs:
         script: |
           cd twitter-sentiment-apps/get-tweet
-          docker build -t $(containerRegistryFqdn)/get-tweet:$(Build.BuildId) .
+          docker build -t $(AZURE_CONTAINER_REGISTRY_FQDN)/get-tweet:$(Build.BuildId) .
 
     - task: CmdLine@2
       displayName: 'docker push (get-tweet)'
       inputs:
         script: |
-          docker push $(containerRegistryFqdn)/get-tweet:$(Build.BuildId)
+          docker push $(AZURE_CONTAINER_REGISTRY_FQDN)/get-tweet:$(Build.BuildId)
 
     - task: CmdLine@2
       displayName: 'docker build (process-tweet)'
       inputs:
         script: |
           cd twitter-sentiment-apps/process-tweet
-          docker build -t $(containerRegistryFqdn)/process-tweet:$(Build.BuildId) .
+          docker build -t $(AZURE_CONTAINER_REGISTRY_FQDN)/process-tweet:$(Build.BuildId) .
 
     - task: CmdLine@2
       displayName: 'docker push (process-tweet)'
       inputs:
         script: |
-          docker push $(containerRegistryFqdn)/process-tweet:$(Build.BuildId)
+          docker push $(AZURE_CONTAINER_REGISTRY_FQDN)/process-tweet:$(Build.BuildId)
 
 - stage: infrastructure_pre_production
   dependsOn: build
@@ -140,14 +148,48 @@ stages:
         resourceGroupName: 'twitter001'
         location: 'East US'
         templateLocation: 'Linked artifact'
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: '$(azureSubscription)'
+        subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: $(AZURE_RESOURCE_GROUP)
+        location: 'East US'
+        templateLocation: 'Linked artifact'
         csmFile: './deployment/arm/azuredeploy.json'
         csmParametersFile: './deployment/arm/azuredeploy.parameters.json'
+        overrideParameters: '-aksName $(AZURE_KUBERNETES_SERVICE) -storageAccountName $(AZURE_STORAGE_ACCT) -cognitiveName $(AZURE_COG_SERVICES) -scriptIdentity $(AZURE_MANAGED_IDENTITY_NAME) -cosmosName $(AZURE_COSMOS_DB) -acrName $(AZURE_CONTAINER_REGISTRY)'
         deploymentMode: 'Incremental'
 
-# - stage: app_pre_production
-#   dependsOn: infrastructure_pre_production
+- stage: app_pre_production
+  dependsOn: infrastructure_pre_production
 
-# - stage: infrastructure_pre_production
+  jobs:
+  - job: deploy
+    pool: Hosted Ubuntu 1604
+    continueOnError: false
+    timeoutInMinutes: 20
+
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'azure-service-connection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          AZURE_QUEUE_KEY=$(az storage account keys list --account-name $AZURE_STORAGE_ACCT --resource-group $AZURE_RESOURCE_GROUP --query [0].value -o tsv)
+          echo "##vso[task.setvariable variable=AZURE_QUEUE_KEY;isOutput=true]$AZURE_QUEUE_KEY"
+          COSMOS_DB_ENDPOINT=$(az cosmosdb show --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP --query documentEndpoint -o tsv)
+          echo "##vso[task.setvariable variable=COSMOS_DB_ENDPOINT;isOutput=true]$COSMOS_DB_ENDPOINT"
+          COSMOS_DB_MASTERKEY=$(az cosmosdb list-keys --name $AZURE_COSMOS_DB --resource-group $AZURE_RESOURCE_GROUP --query primaryMasterKey -o tsv)
+          echo "##vso[task.setvariable variable=COSMOS_DB_MASTERKEY;isOutput=true]$COSMOS_DB_MASTERKEY"
+          AZURE_ANALYTICS_ENDPOINT=$(az cognitiveservices account show --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query endpoint -o tsv)
+          echo "##vso[task.setvariable variable=AZURE_ANALYTICS_ENDPOINT;isOutput=true]$AZURE_ANALYTICS_ENDPOINT"
+          AZURE_ANALYTICS_KEY=$(az cognitiveservices account keys list --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query key1 -o tsv)
+          echo "##vso[task.setvariable variable=AZURE_ANALYTICS_KEY;isOutput=true]$AZURE_ANALYTICS_KEY"
+
+# - stage: infrastructure_production
 #   dependsOn: build
 
 # - stage: app_pre_production
