@@ -180,16 +180,11 @@ stages:
           echo "##vso[task.setvariable variable=AZURE_ANALYTICS_KEY;isOutput=true]$AZURE_ANALYTICS_KEY"
           echo $AZURE_ANALYTICS_KEY
 
-    - task: CmdLine@2
+    - task: Bash@3
       displayName: get-var-for-test
       inputs:
+        targetType: 'inline'
         script: |
           echo "-------------------------------"
-          echo $AZURE_ANALYTICS_KEY
+          echo $(AZURE_ANALYTICS_KEY)
           echo "-------------------------------"
-
-# - stage: infrastructure_production
-#   dependsOn: build
-
-# - stage: app_pre_production
-#   dependsOn: infrastructure_pre_production
