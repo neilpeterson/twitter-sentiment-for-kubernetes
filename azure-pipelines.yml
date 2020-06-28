@@ -66,6 +66,10 @@ stages:
       #     command: init
       #     arguments: '--client-only'
 
+      - task: CmdLine@2
+        inputs:
+          script: 'ls /home/vsts/work/1/s/deployment/helm-chart'
+
       - task: HelmDeploy@0
         displayName: 'helm package (tt-cart)'
         inputs:
