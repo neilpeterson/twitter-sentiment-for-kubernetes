@@ -104,10 +104,10 @@
         {
             "name": "[parameters('acrName')]",
             "type": "Microsoft.ContainerRegistry/registries",
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2019-12-01-preview",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "Classic"
+                "name": "Premium"
             },
             "properties": {}
         },
