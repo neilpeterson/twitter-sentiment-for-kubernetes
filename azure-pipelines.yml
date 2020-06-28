@@ -187,4 +187,5 @@ stages:
         script: |
           echo "-------------------------------"
           echo $(AZURE_ANALYTICS_KEY)
+          echo $AZURE_ANALYTICS_KEY
           echo "-------------------------------"
