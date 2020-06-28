@@ -8,9 +8,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-
-  # Azure
-  # azureSubscription: azure-service-connection
   azureSubscription: azure-devops-managed-identity
 
 stages:
