@@ -180,6 +180,14 @@ stages:
           AZURE_ANALYTICS_KEY=$(az cognitiveservices account keys list --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query key1 -o tsv)
           echo "##vso[task.setvariable variable=AZURE_ANALYTICS_KEY;isOutput=true]$AZURE_ANALYTICS_KEY"
 
+    - task: CmdLine@2
+      displayName: get-var-for-test
+      inputs:
+        script: |
+          echo "-------------------------------"
+          echo $(AZURE_ANALYTICS_KEY)
+          echo "-------------------------------"
+
 # - stage: infrastructure_production
 #   dependsOn: build
 
