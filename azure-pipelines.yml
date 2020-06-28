@@ -56,7 +56,7 @@ stages:
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
         deploymentScope: 'Resource Group'
-        azureResourceManagerConnection: 'azure-service-principal'
+        azureResourceManagerConnection: 'azure-service-connection'
         subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
         action: 'Create Or Update Resource Group'
         resourceGroupName: 'test123'
