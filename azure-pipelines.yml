@@ -10,10 +10,6 @@ pool:
 variables:
 - group: 'twitter-app'
 
-
-  # Azure
-  azureSubscription: azure-service-connection
-
   # Container Registry
   # AZURE_CONTAINER_REGISTRY: nepetersacr008
   # AZURE_CONTAINER_REGISTRY_FQDN: nepetersacr008.azurecr.io
