@@ -1,15 +1,20 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-get-tweet
   labels:
-    app: {{ .Release.Name }}
+    # app: {{ .Release.Name }}
+    app: get-tweet
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: get-tweet
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        # app: {{ .Release.Name }}
+        app: get-tweet
     spec:
       containers:
       - name: {{ .Release.Name }}-get-tweet
@@ -33,18 +38,23 @@ spec:
           value: {{ .Values.AZURE_QUEUE_KEY }}
       terminationGracePeriodSeconds: 0
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-process-tweet
   labels:
-    app: {{ .Release.Name }}
+    # app: {{ .Release.Name }}
+    app: process-tweet
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: process-tweet
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        # app: {{ .Release.Name }}
+        app: process-tweet
     spec:
       containers:
       - name: {{ .Release.Name }}-process-tweet
@@ -74,18 +84,23 @@ spec:
                 command: ["bin/sh","-c","touch /kill_switch"]
       terminationGracePeriodSeconds: 2
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-chart-tweet
   labels:
-    app: {{ .Release.Name }}
+    # app: {{ .Release.Name }}
+    app: chart-tweet
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: chart-tweet
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-chart-tweet
+        # app: {{ .Release.Name }}-chart-tweet
+        app: chart-tweet
     spec:
       containers:
       - name: {{ .Release.Name }}-chart-tweet
