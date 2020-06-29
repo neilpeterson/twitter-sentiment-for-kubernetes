@@ -32,7 +32,7 @@ stages:
 #           Find-Module pester | Install-Module -Force
 
 - stage: build
-  dependsOn: test
+  #dependsOn: test
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   jobs:
