@@ -148,7 +148,7 @@ stages:
         targetType: 'inline'
         script: |
           ls
-          ls /deployment/
+          ls /deployment
 
     - task: HelmDeploy@0
       inputs:
