@@ -148,7 +148,7 @@ stages:
         targetType: 'inline'
         script: |
           ls
-          ls /deployment/helm-chart/twitter-sentiment
+          ls /deployment/
 
     - task: HelmDeploy@0
       inputs:
