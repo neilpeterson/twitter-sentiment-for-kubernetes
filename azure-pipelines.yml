@@ -186,7 +186,7 @@ stages:
         script: |
           echo "-------------------------------"
           echo $(AZURE_QUEUE_KEY)
-          echo $(COSMOS_DB_ENDPOIN)
+          echo $(COSMOS_DB_ENDPOINT)
           echo $(COSMOS_DB_MASTERKEY)
           echo $(AZURE_ANALYTICS_ENDPOINT)
           echo $(AZURE_ANALYTICS_KEY)
