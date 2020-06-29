@@ -148,7 +148,7 @@ stages:
         targetType: 'inline'
         script: |
           ls
-          cd /deployment
+          ls twitter-sentiment-apps
 
     - task: HelmDeploy@0
       inputs:
