@@ -142,22 +142,16 @@ stages:
           echo "##vso[task.setvariable variable=AZURE_ANALYTICS_ENDPOINT]$AZURE_ANALYTICS_ENDPOINT"
           AZURE_ANALYTICS_KEY=$(az cognitiveservices account keys list --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query key1 -o tsv)
           echo "##vso[task.setvariable variable=AZURE_ANALYTICS_KEY]$AZURE_ANALYTICS_KEY"
-          echo $(TWITTER_ACCESS_TOKEN)
-          echo $(TWITTER_ACCESS_TOKEN_SECRET)
-          echo $(TWITTER_CONSUMER_KEY)
-          echo $(TWITTER_CONSUMER_SECRET)
 
-  
-
-    # - task: HelmDeploy@0
-    #   inputs:
-    #     connectionType: 'Azure Resource Manager'
-    #     azureSubscription: 'azure-service-connection'
-    #     azureResourceGroup: $(AZURE_RESOURCE_GROUP)
-    #     kubernetesCluster: $(AZURE_KUBERNETES_SERVICE)
-    #     useClusterAdmin: true
-    #     command: 'upgrade'
-    #     chartType: 'FilePath'
-    #     chartPath: '/deployment/helm-chart/twitter-sentiment/'
-    #     releaseName: 'twitter-sentimentt:$(Build.BuildId)'
-    #     overrideValues: 'TWITTER_CONSUMER_KEY=<>,TWITTER_CONSUMER_SECRET=<>,TWITTER_ACCESS_TOKEN=<>,TWITTER_ACCESS_TOKEN_SECRET=<>,TWITTER_TEXT=<>,'
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'azure-service-connection'
+        azureResourceGroup: $(AZURE_RESOURCE_GROUP)
+        kubernetesCluster: $(AZURE_KUBERNETES_SERVICE)
+        useClusterAdmin: true
+        command: 'upgrade'
+        chartType: 'FilePath'
+        chartPath: '/deployment/helm-chart/twitter-sentiment/'
+        releaseName: 'twitter-sentimentt:$(Build.BuildId)'
+        overrideValues: 'TWITTER_CONSUMER_KEY=$(TWITTER_CONSUMER_KEY),TWITTER_CONSUMER_SECRET=$(TWITTER_CONSUMER_SECRET),TWITTER_ACCESS_TOKEN=$(TWITTER_ACCESS_TOKEN),TWITTER_ACCESS_TOKEN_SECRET=$(TWITTER_ACCESS_TOKEN_SECRET),TWITTER_TEXT=$(TWITTER_TEXT),AZURE_STORAGE_ACCT=$(AZURE_STORAGE_ACCT),AZURE_QUEUE=$(AZURE_QUEUE),AZURE_QUEUE_KEY=$(AZURE_QUEUE_KEY),AZURE_ANALYTICS_URI=$(AZURE_ANALYTICS_ENDPOINT),AZURE_ANALYTICS_KEY=$(AZURE_ANALYTICS_KEY),COSMOS_DB_ENDPOINT=(COSMOS_DB_ENDPOINT),COSMOS_DB_MASTERKEY=$(COSMOS_DB_MASTERKEY),COSMOS_DB_DATABASE=$(COSMOS_DB_DATABASE),COSMOS_DB_COLLECTION=(COSMOS_DB_COLLECTION)'
