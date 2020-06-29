@@ -153,7 +153,7 @@ stages:
 #         deploymentMode: 'Incremental'
 
 - stage: app_pre_production
-  dependsOn: build
+  # dependsOn: build
 
   jobs:
   - job: deploy
