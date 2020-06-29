@@ -25,23 +25,23 @@ variables:
 
 stages:
 
-- stage: test
+# - stage: test
 
-  jobs:
-  - job: tests
-    pool: Hosted Ubuntu 1604
-    continueOnError: false
-    timeoutInMinutes: 20
+#   jobs:
+#   - job: tests
+#     pool: Hosted Ubuntu 1604
+#     continueOnError: false
+#     timeoutInMinutes: 20
 
-    steps:
+#     steps:
 
-    # Temp test, replace this with ARM TTK / Python Test Suite?
-    # - task: PowerShell@2
-    #   displayName: Install Pester
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #       Find-Module pester | Install-Module -Force
+#     Temp test, replace this with ARM TTK / Python Test Suite?
+#     - task: PowerShell@2
+#       displayName: Install Pester
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#           Find-Module pester | Install-Module -Force
 
 - stage: infrastructure_pre_production
   # dependsOn: build
