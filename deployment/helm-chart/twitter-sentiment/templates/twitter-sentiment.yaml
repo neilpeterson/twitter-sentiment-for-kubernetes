@@ -21,7 +21,7 @@ spec:
         image: {{ .Values.imageRegistry }}/get-tweet:{{ .Values.imageVersion }}
         env:
         - name: AZURE_QUEUE
-          value: {{ .Values.AZURE_QUEUE }}
+          value: {{ .Values.AZURE_STORAGE_ACCT }}
         - name: TWITTER_CONSUMER_KEY
           value: {{ .Values.TWITTER_CONSUMER_KEY }}
         - name: TWITTER_CONSUMER_SECRET
@@ -69,7 +69,7 @@ spec:
         - name: AZURE_QUEUE_KEY
           value: {{ .Values.AZURE_QUEUE_KEY }}
         - name: AZURE_QUEUE
-          value: {{ .Values.AZURE_QUEUE }}
+          value: {{ .Values.AZURE_STORAGE_ACCT }}
         - name: COSMOS_DB_ENDPOINT
           value: {{ .Values.COSMOS_DB_ENDPOINT }}
         - name: COSMOS_DB_MASTERKEY
