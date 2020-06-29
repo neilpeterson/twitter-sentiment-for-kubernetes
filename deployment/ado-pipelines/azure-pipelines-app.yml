@@ -143,6 +143,13 @@ stages:
           AZURE_ANALYTICS_KEY=$(az cognitiveservices account keys list --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query key1 -o tsv)
           echo "##vso[task.setvariable variable=AZURE_ANALYTICS_KEY]$AZURE_ANALYTICS_KEY"
 
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          ls
+          ls /deployment/helm-chart/twitter-sentiment/
+
     - task: HelmDeploy@0
       inputs:
         connectionType: 'Azure Resource Manager'
