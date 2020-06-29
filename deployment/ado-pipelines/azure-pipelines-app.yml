@@ -46,8 +46,8 @@ stages:
       - task: AzureCLI@1
         displayName: 'AZ ACR Login'
         inputs:
-          azureSubscription: $(azureSubscription)
-          scriptLocation: inlineScript
+          azureSubscription: 'azure-service-connection'
+          scriptLocation: 'inlineScript'
           inlineScript: 'az acr login --name $(AZURE_CONTAINER_REGISTRY)'
 
       - task: HelmDeploy@0
@@ -60,7 +60,7 @@ stages:
       - task: AzureCLI@1
         displayName: 'AZ ACR helm push (twitter-sentiment)'
         inputs:
-          azureSubscription: $(azureSubscription)
+          azureSubscription: 'azure-service-connection'
           scriptLocation: inlineScript
           inlineScript: 'az acr helm push -n $(AZURE_CONTAINER_REGISTRY) /home/vsts/work/1/a/twitter-sentiment-$(Build.BuildId).tgz'
 
@@ -74,7 +74,7 @@ stages:
     - task: AzureCLI@1
       displayName: 'AZ ACR Login'
       inputs:
-        azureSubscription: $(azureSubscription)
+        azureSubscription: 'azure-service-connection'
         scriptLocation: inlineScript
         inlineScript: 'az acr login --name $(AZURE_CONTAINER_REGISTRY)'
 
