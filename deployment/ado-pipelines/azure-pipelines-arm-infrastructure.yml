@@ -65,15 +65,15 @@ stages:
           echo $(AZURE_COSMOS_DB)
           echo $(AZURE_CONTAINER_REGISTRY)
 
-    # - task: AzureResourceManagerTemplateDeployment@3
-    #   inputs:
-    #     deploymentScope: 'Resource Group'
-    #     azureResourceManagerConnection: 'azure-service-connection'
-    #     subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
-    #     action: 'Create Or Update Resource Group'
-    #     resourceGroupName: '$(AZURE_RESOURCE_GROUP)'
-    #     location: 'East US'
-    #     templateLocation: 'Linked artifact'
-    #     csmFile: './deployment/arm/azuredeploy.json'
-    #     overrideParameters: '-aksName "$(AZURE_KUBERNETES_SERVICE)" -storageAccountName "$(AZURE_STORAGE_ACCT)" -cognitiveName "$(AZURE_ANALYTICS)" -scriptIdentity "$(AZURE_MANAGED_IDENTITY_NAME)" -cosmosName "$(AZURE_COSMOS_DB)" -acrName "$(AZURE_CONTAINER_REGISTRY)"'
-    #     deploymentMode: 'Incremental'
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'azure-service-connection'
+        subscriptionId: '10a09851-d632-420e-ad20-2cd774fd4d41'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: '$(AZURE_RESOURCE_GROUP)'
+        location: 'East US'
+        templateLocation: 'Linked artifact'
+        csmFile: './deployment/arm/azuredeploy.json'
+        overrideParameters: '-aksName "$(AZURE_KUBERNETES_SERVICE)" -storageAccountName "$(AZURE_STORAGE_ACCT)" -cognitiveName "$(AZURE_ANALYTICS)" -scriptIdentity "$(AZURE_MANAGED_IDENTITY_NAME)" -cosmosName "$(AZURE_COSMOS_DB)" -acrName "$(AZURE_CONTAINER_REGISTRY)"'
+        deploymentMode: 'Incremental'
