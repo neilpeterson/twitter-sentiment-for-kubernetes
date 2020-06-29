@@ -178,8 +178,6 @@ stages:
           echo "##vso[task.setvariable variable=AZURE_ANALYTICS_ENDPOINT;isOutput=true]$AZURE_ANALYTICS_ENDPOINT"
           AZURE_ANALYTICS_KEY=$(az cognitiveservices account keys list --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_ANALYTICS --query key1 -o tsv)
           echo "##vso[task.setvariable variable=AZURE_ANALYTICS_KEY]$AZURE_ANALYTICS_KEY"
-          echo $AZURE_ANALYTICS_KEY
-          echo $(AZURE_ANALYTICS_KEY)
 
     - task: Bash@3
       displayName: get-var-for-test
@@ -187,6 +185,9 @@ stages:
         targetType: 'inline'
         script: |
           echo "-------------------------------"
+          echo $(AZURE_QUEUE_KEY)
+          echo $(COSMOS_DB_ENDPOIN)
+          echo $(COSMOS_DB_MASTERKEY)
+          echo $(AZURE_ANALYTICS_ENDPOINT)
           echo $(AZURE_ANALYTICS_KEY)
-          echo $AZURE_ANALYTICS_KEY
           echo "-------------------------------"
