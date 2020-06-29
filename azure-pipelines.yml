@@ -191,3 +191,16 @@ stages:
           echo $(AZURE_ANALYTICS_ENDPOINT)
           echo $(AZURE_ANALYTICS_KEY)
           echo "-------------------------------"
+
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'azure-service-connection'
+        azureResourceGroup: 'ninernep005'
+        kubernetesCluster: 'ninernep003'
+        useClusterAdmin: true
+        command: 'upgrade'
+        chartType: 'FilePath'
+        chartPath: '/deployment/helm-chart/twitter-sentiment/'
+        releaseName: 'twitter-sentimentt:$(Build.BuildId)'
+        overrideValues: 'TWITTER_CONSUMER_KEY=<>,TWITTER_CONSUMER_SECRET=<>,TWITTER_ACCESS_TOKEN=<>,TWITTER_ACCESS_TOKEN_SECRET=<>,TWITTER_TEXT=<>,'
