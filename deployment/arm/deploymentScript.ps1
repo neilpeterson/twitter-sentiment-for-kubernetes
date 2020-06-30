@@ -16,5 +16,3 @@ bash -c "az aks install-cli"
 bash -c "az aks get-credentials --name $aksCluster --resource-group $aksResourceGroup"
 bash -c "kubectl apply -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/deployment-rbac.yaml"
 bash -c "kubectl apply -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/mic-exception.yaml"
-
-# Testing Path Filtering
