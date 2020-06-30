@@ -86,3 +86,5 @@ Once a public IP address has been returned, browse to this IP address to see the
 ## Caution
 
 Once the application starts, tweets are immediately captured, stored in the Azure Queue, and processed. While the application is running, it will incur an Azure cost. As the number of returned tweets increases, so does the Azure spend.
+
+### Testing path filtering
