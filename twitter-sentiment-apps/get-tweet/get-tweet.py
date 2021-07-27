@@ -1,12 +1,11 @@
-from azure.storage.queue import QueueService
+from azure.storage.queue import QueueClient
 import os
 import json
 import tweepy
 
 # Azure Storage
-AZURE_STORAGE_ACCT = os.environ['AZURE_STORAGE_ACCT']
 AZURE_QUEUE = os.environ['AZURE_QUEUE']
-AZURE_QUEUE_KEY = os.environ['AZURE_QUEUE_KEY']
+AZURE_STORAGE_ACCT_CONNECTION_STRING = os.environ['AZURE_STORAGE_ACCT_CONNECTION_STRING']
 
 # Twitter
 TWITTER_CONSUMER_KEY = os.environ['TWITTER_CONSUMER_KEY']
@@ -21,22 +20,7 @@ auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 # Build Azure queue object
-queue_service = QueueService(account_name=AZURE_STORAGE_ACCT, account_key=AZURE_QUEUE_KEY)
-
-# Check for queue / create queue
-queue = queue_service.list_queues()
-
-queueName = False
-
-for i in queue:
-    if AZURE_QUEUE == i.name:
-        queueName = True
-
-if not queueName:
-    print("Create Queue")
-    queue_service.create_queue(AZURE_QUEUE)
-else:
-    print("Queue exsists")
+QUEUE_SERVICE = QueueClient.from_connection_string(AZURE_STORAGE_ACCT_CONNECTION_STRING, AZURE_QUEUE)
 
 # Define Tweepy stream class
 class MyStreamListener(tweepy.StreamListener):
@@ -47,10 +31,10 @@ class MyStreamListener(tweepy.StreamListener):
         if "FILTER_RETWEET" in os.environ:
             if (not status.retweeted) and ('RT @' not in status.text):
                 print(status.text)
-                queue_service.put_message(AZURE_QUEUE, status.text)
+                QUEUE_SERVICE.send_message(status.text)
         else:
             print(status.text)
-            queue_service.put_message(AZURE_QUEUE, status.text)
+            QUEUE_SERVICE.send_message(status.text)
 
     def on_error(self, status):
         print('Error')

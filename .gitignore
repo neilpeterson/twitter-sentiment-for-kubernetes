@@ -104,4 +104,7 @@ ENV/
 nepeters.txt
 .DS_Store
 .vscode
-docker-compose.yaml
+docker-compose.yml
+twitter-sentiment-environment-variables.sh
+twitter-sentiment-kubernetes-manifest.yml
+values.yaml

@@ -1,7 +1,7 @@
 FROM python
 
 RUN pip install pydocumentdb && \
-    pip install azure-storage-queue==2.1. && \
+    pip install azure-storage-queue && \
     pip install requests
 
 ADD ./process-tweet.py /app/process-tweet.py

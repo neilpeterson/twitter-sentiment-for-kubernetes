@@ -18,4 +18,4 @@ COSMOS_DB_COLLECTION:
 
 # Images
 imageRegistry: neilpeterson
-imageVersion: v2
+imageVersion: v4

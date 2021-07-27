@@ -1,10 +1,8 @@
-from azure.storage.queue import QueueService
-import pydocumentdb
+from azure.storage.queue import QueueClient
 import pydocumentdb.document_client as document_client
 import os
 import json
 import requests
-import sys
 
 # Azure Analytics
 AZURE_ANALYTICS_URI = os.environ['AZURE_ANALYTICS_URI']
@@ -12,9 +10,8 @@ AZURE_ANALYTICS_URI = AZURE_ANALYTICS_URI + "/text/analytics/v3.0/sentiment"
 AZURE_ANALYTICS_KEY = os.environ['AZURE_ANALYTICS_KEY']
 
 # Azure Storage
-AZURE_STORAGE_ACCT = os.environ['AZURE_STORAGE_ACCT']
+AZURE_STORAGE_ACCT_CONNECTION_STRING = os.environ['AZURE_STORAGE_ACCT_CONNECTION_STRING']
 AZURE_QUEUE = os.environ['AZURE_QUEUE']
-AZURE_QUEUE_KEY = os.environ['AZURE_QUEUE_KEY']
 
 # Cosmos DB
 COSMOS_DB_ENDPOINT = os.environ['COSMOS_DB_ENDPOINT']
@@ -23,50 +20,12 @@ COSMOS_DB_DATABASE = os.environ['COSMOS_DB_DATABASE']
 COSMOS_DB_COLLECTION = os.environ['COSMOS_DB_COLLECTION']
 
 # Build queue object
-QUEUE_SERVICE = QueueService(account_name=AZURE_STORAGE_ACCT, account_key=AZURE_QUEUE_KEY)
+QUEUE_SERVICE = QueueClient.from_connection_string(AZURE_STORAGE_ACCT_CONNECTION_STRING, AZURE_QUEUE)
 
 # Build Cosmos DB client
 client = document_client.DocumentClient(COSMOS_DB_ENDPOINT, {'masterKey': COSMOS_DB_MASTERKEY})
 
 # Start Functions
-
-# Get sentiment
-# TODO - handle multiple tweets in single post
-def analytics(text):
-    headers = {
-        'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': AZURE_ANALYTICS_KEY,
-    }
-
-    payload = {
-    "documents": [
-        {
-        "language": "en",
-        "id": "apex-demo",
-        "text": text
-        }
-    ]
-    }
-
-    r = requests.post(AZURE_ANALYTICS_URI, data=json.dumps(payload), headers=headers)
-
-    print(r.text)
-   
-    try:
-        return json.loads(r.text)['documents'][0]['sentiment']
-    except:
-        print("Analytics error.")
-
-# Get Azure Queue count
-def queue_count():
-    metadata = QUEUE_SERVICE.get_queue_metadata(AZURE_QUEUE)
-    queue_length = metadata.approximate_message_count
-    messages = QUEUE_SERVICE.get_messages(AZURE_QUEUE, num_messages=1)
-    return messages
-
-# Delete Azure Queue message
-def delete_queue_message(queue, id, pop_receipt):
-    QUEUE_SERVICE.delete_message(queue, id, pop_receipt)
 
 # Initialize Cosmos DB
 def cosmosdb():
@@ -95,6 +54,37 @@ def cosmosdb():
     # Return collection
     return collection
 
+# Get Azure Queue count
+def queue_count():
+    messages = QUEUE_SERVICE.receive_messages(messages_per_page=1)
+    return messages
+
+# Get sentiment
+def analytics(text):
+    headers = {
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': AZURE_ANALYTICS_KEY,
+    }
+
+    payload = {
+    "documents": [
+        {
+        "language": "en",
+        "id": "apex-demo",
+        "text": text
+        }
+    ]
+    }
+
+    r = requests.post(AZURE_ANALYTICS_URI, data=json.dumps(payload), headers=headers)
+
+    print(r.text)
+   
+    try:
+        return json.loads(r.text)['documents'][0]['sentiment']
+    except:
+        print("Analytics error.")
+
 # Add tweet and sentiment score to Cosmos DB
 def add_tweet_cosmosdb(messgae, sentiment):
     client.CreateDocument(collection['_self'],
@@ -103,23 +93,16 @@ def add_tweet_cosmosdb(messgae, sentiment):
             'sentiment': sentiment
         })
 
-# KILL SWITCH
-def kill_switch():
+# Delete Azure Queue message
+def delete_queue_message(queue, message):
+    QUEUE_SERVICE.delete_message(message)
 
-    # Simple operation for Kubernetes postStop hook
-    if os.path.exists("/kill_switch"):
-        print("Stop processing due to kill switch.")
-        sys.exit(1)
-
-# End Functions
+## Start Main
 
 # Initalize Cosmos DB
 collection = cosmosdb()
 
 while True:
-
-    # Used with Kubernetes preStop hook for graceful scale down.
-    kill_switch()
 
     # Get tweets from Azure Queue
     returned_messages = queue_count()
@@ -135,4 +118,4 @@ while True:
         add_tweet_cosmosdb(message.content, returned_sentiment)
 
         # Delete message from queue
-        delete_queue_message(AZURE_QUEUE, message.id, message.pop_receipt)
+        delete_queue_message(AZURE_QUEUE, message)
