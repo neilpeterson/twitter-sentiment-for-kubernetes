@@ -4,23 +4,23 @@ import json
 import tweepy
 
 # Azure Storage
-AZURE_QUEUE = os.environ['AZURE_QUEUE']
-AZURE_STORAGE_ACCT_CONNECTION_STRING = os.environ['AZURE_STORAGE_ACCT_CONNECTION_STRING']
+azure_queue = os.environ['AZURE_QUEUE']
+azure_storage_acct_connection_string = os.environ['AZURE_STORAGE_ACCT_CONNECTION_STRING']
 
 # Twitter
-TWITTER_CONSUMER_KEY = os.environ['TWITTER_CONSUMER_KEY']
-TWITTER_CONSUMER_SECRET = os.environ['TWITTER_CONSUMER_SECRET']
-TWITTER_ACCESS_TOKEN = os.environ['TWITTER_ACCESS_TOKEN']
-TWITTER_ACCESS_TOKEN_SECRET = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
-TWITTER_TEXT = os.environ['TWITTER_TEXT']
+twitter_consumer_key = os.environ['TWITTER_CONSUMER_KEY']
+twitter_consumer_secret = os.environ['TWITTER_CONSUMER_SECRET']
+twitter_accesss_token = os.environ['TWITTER_ACCESS_TOKEN']
+twitter_access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
+twitter_serarch_string = os.environ['TWITTER_TEXT']
 
 # Authenticate with Twitter
-auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
-auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
+auth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
+auth.set_access_token(twitter_accesss_token, twitter_access_token_secret)
 api = tweepy.API(auth)
 
 # Build Azure queue object
-QUEUE_SERVICE = QueueClient.from_connection_string(AZURE_STORAGE_ACCT_CONNECTION_STRING, AZURE_QUEUE)
+queue_service = QueueClient.from_connection_string(azure_storage_acct_connection_string, azure_queue)
 
 # Define Tweepy stream class
 class MyStreamListener(tweepy.StreamListener):
@@ -31,10 +31,10 @@ class MyStreamListener(tweepy.StreamListener):
         if "FILTER_RETWEET" in os.environ:
             if (not status.retweeted) and ('RT @' not in status.text):
                 print(status.text)
-                QUEUE_SERVICE.send_message(status.text)
+                queue_service.send_message(status.text)
         else:
             print(status.text)
-            QUEUE_SERVICE.send_message(status.text)
+            queue_service.send_message(status.text)
 
     def on_error(self, status):
         print('Error')
@@ -42,5 +42,5 @@ class MyStreamListener(tweepy.StreamListener):
 # Twitter Stream
 listener = MyStreamListener()
 stream = tweepy.Stream(auth, listener)
-setTerms = [TWITTER_TEXT]
+setTerms = [twitter_serarch_string]
 stream.filter(track = setTerms)

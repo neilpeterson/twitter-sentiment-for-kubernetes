@@ -5,25 +5,26 @@ import json
 import requests
 
 # Azure Analytics
-AZURE_ANALYTICS_URI = os.environ['AZURE_ANALYTICS_URI']
-AZURE_ANALYTICS_URI = AZURE_ANALYTICS_URI + "/text/analytics/v3.0/sentiment"
-AZURE_ANALYTICS_KEY = os.environ['AZURE_ANALYTICS_KEY']
+azure_analytics_uri = os.environ['AZURE_ANALYTICS_URI']
+# Why duplicated variable
+azure_analytics_uri = azure_analytics_uri + "/text/analytics/v3.0/sentiment"
+azure_analytics_key = os.environ['AZURE_ANALYTICS_KEY']
 
 # Azure Storage
-AZURE_STORAGE_ACCT_CONNECTION_STRING = os.environ['AZURE_STORAGE_ACCT_CONNECTION_STRING']
-AZURE_QUEUE = os.environ['AZURE_QUEUE']
+azure_storage_acct_connection_string = os.environ['AZURE_STORAGE_ACCT_CONNECTION_STRING']
+azure_queue = os.environ['AZURE_QUEUE']
 
 # Cosmos DB
-COSMOS_DB_ENDPOINT = os.environ['COSMOS_DB_ENDPOINT']
-COSMOS_DB_MASTERKEY = os.environ['COSMOS_DB_MASTERKEY']
-COSMOS_DB_DATABASE = os.environ['COSMOS_DB_DATABASE']
-COSMOS_DB_COLLECTION = os.environ['COSMOS_DB_COLLECTION']
+cosmos_db_endpoint = os.environ['COSMOS_DB_ENDPOINT']
+cosmos_db_masterkey = os.environ['COSMOS_DB_MASTERKEY']
+cosmos_db_database = os.environ['COSMOS_DB_DATABASE']
+cosmos_db_collection = os.environ['COSMOS_DB_COLLECTION']
 
 # Build queue object
-QUEUE_SERVICE = QueueClient.from_connection_string(AZURE_STORAGE_ACCT_CONNECTION_STRING, AZURE_QUEUE)
+queue_service = QueueClient.from_connection_string(azure_storage_acct_connection_string, azure_queue)
 
 # Build Cosmos DB client
-client = document_client.DocumentClient(COSMOS_DB_ENDPOINT, {'masterKey': COSMOS_DB_MASTERKEY})
+client = document_client.DocumentClient(cosmos_db_endpoint, {'masterKey': cosmos_db_masterkey})
 
 # Start Functions
 
@@ -32,14 +33,14 @@ def cosmosdb():
 
     # Check for database - quick hack /fix up proper
     try:
-        db = next((data for data in client.ReadDatabases() if data['id'] == COSMOS_DB_DATABASE))
+        db = next((data for data in client.ReadDatabases() if data['id'] == cosmos_db_database))
     # Create if missing
     except:
-        db = client.CreateDatabase({'id': COSMOS_DB_DATABASE})
+        db = client.CreateDatabase({'id': cosmos_db_database})
 
     # Check for collection - quick hack /fix up proper
     try:
-        collection = next((coll for coll in client.ReadCollections(db['_self']) if coll['id'] == COSMOS_DB_COLLECTION))
+        collection = next((coll for coll in client.ReadCollections(db['_self']) if coll['id'] == cosmos_db_collection))
     # Create if missing
     except:
         options = {
@@ -49,21 +50,21 @@ def cosmosdb():
         }
 
         # Create a collection
-        collection = client.CreateCollection(db['_self'], {'id': COSMOS_DB_COLLECTION}, options)
+        collection = client.CreateCollection(db['_self'], {'id': cosmos_db_collection}, options)
 
     # Return collection
     return collection
 
 # Get Azure Queue count
 def queue_count():
-    messages = QUEUE_SERVICE.receive_messages(messages_per_page=1)
+    messages = queue_service.receive_messages(messages_per_page=1)
     return messages
 
 # Get sentiment
 def analytics(text):
     headers = {
         'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': AZURE_ANALYTICS_KEY,
+        'Ocp-Apim-Subscription-Key': azure_analytics_key,
     }
 
     payload = {
@@ -76,7 +77,7 @@ def analytics(text):
     ]
     }
 
-    r = requests.post(AZURE_ANALYTICS_URI, data=json.dumps(payload), headers=headers)
+    r = requests.post(azure_analytics_uri, data=json.dumps(payload), headers=headers)
 
     print(r.text)
    
@@ -95,7 +96,7 @@ def add_tweet_cosmosdb(messgae, sentiment):
 
 # Delete Azure Queue message
 def delete_queue_message(queue, message):
-    QUEUE_SERVICE.delete_message(message)
+    queue_service.delete_message(message)
 
 ## Start Main
 
@@ -118,4 +119,4 @@ while True:
         add_tweet_cosmosdb(message.content, returned_sentiment)
 
         # Delete message from queue
-        delete_queue_message(AZURE_QUEUE, message)
+        delete_queue_message(azure_queue, message)
