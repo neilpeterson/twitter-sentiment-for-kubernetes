@@ -10,9 +10,6 @@ cosmos_db_masterkey = os.environ['COSMOS_DB_MASTERKEY']
 cosmos_db_database = os.environ['COSMOS_DB_DATABASE']
 cosmos_db_collection = os.environ['COSMOS_DB_COLLECTION']
 
-# Chart label - static for now, will update to somethign dynamic
-chart_label = os.environ['CHART_LABEL']
-
 # Set chart title
 if "CHART_LABEL" in os.environ:
     chart_title = "Tweets about " + chart_label
