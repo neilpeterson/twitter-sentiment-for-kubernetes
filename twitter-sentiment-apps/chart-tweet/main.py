@@ -5,22 +5,19 @@ import pygal
 from pygal.style import BlueStyle
 
 # CosmosDB connection and DB settings
-COSMOS_DB_ENDPOINT = os.environ['COSMOS_DB_ENDPOINT']
-COSMOS_DB_MASTERKEY = os.environ['COSMOS_DB_MASTERKEY']
-COSMOS_DB_DATABASE = os.environ['COSMOS_DB_DATABASE']
-COSMOS_DB_COLLECTION = os.environ['COSMOS_DB_COLLECTION']
-
-# Chart label - static for now, will update to somethign dynamic
-CHART_LABEL = os.environ['CHART_LABEL']
+cosmos_db_endpoint = os.environ['COSMOS_DB_ENDPOINT']
+cosmos_db_masterkey = os.environ['COSMOS_DB_MASTERKEY']
+cosmos_db_database = os.environ['COSMOS_DB_DATABASE']
+cosmos_db_collection = os.environ['COSMOS_DB_COLLECTION']
 
 # Set chart title
 if "CHART_LABEL" in os.environ:
-    chart_title = "Tweets about " + CHART_LABEL
+    chart_title = "Tweets about " + chart_label
 else:
     chart_title = "Tweet Sentiment"
 
 # Initialize the Python DocumentDB client
-client = document_client.DocumentClient(COSMOS_DB_ENDPOINT, {'masterKey': COSMOS_DB_MASTERKEY})
+client = document_client.DocumentClient(cosmos_db_endpoint, {'masterKey': cosmos_db_masterkey})
 
 app = Flask(__name__)
 
@@ -28,8 +25,8 @@ app = Flask(__name__)
 def index():
 
     # Return data from Cosmos DB
-    db = next((data for data in client.ReadDatabases() if data['id'] == COSMOS_DB_DATABASE))
-    coll = next((coll for coll in client.ReadCollections(db['_self']) if coll['id'] == COSMOS_DB_COLLECTION))
+    db = next((data for data in client.ReadDatabases() if data['id'] == cosmos_db_database))
+    coll = next((coll for coll in client.ReadCollections(db['_self']) if coll['id'] == cosmos_db_collection))
     docs = client.ReadDocuments(coll['_self'])
 
     positive = 0

@@ -108,3 +108,4 @@ docker-compose.yml
 twitter-sentiment-environment-variables.sh
 twitter-sentiment-kubernetes-manifest.yml
 values.yaml
+notes.txt
