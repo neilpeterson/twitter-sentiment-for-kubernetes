@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+
+        "SERVICE_BUS_CONNECTION_STR": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                },
+                "secretName": "SERVICEBUSCONNECTIONSTR"
+            }
+        },
+
+        "SERVICE_BUS_QUEUE_NAME": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                },
+                "secretName": "SERVICEBUSQUEUENAME"
+            }
+        },
+
+        "TWITTER_CONSUMER_KEY": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                },
+                "secretName": "TWITTERCONSUMERKEY"
+            }
+        },
+
+        "TWITTER_CONSUMER_SECRET": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                },
+                "secretName": "TWITTERCONSUMERSECRET"
+            }
+        },
+
+        "TWITTER_ACCESS_TOKEN": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                },
+                "secretName": "TWITTERACCESSTOKEN"
+            }
+        },
+
+        "TWITTER_ACCESS_TOKEN_SECRET": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                },
+                "secretName": "TWITTERACCESSTOKENSECRET"
+            }
+        }
+    }
+}
