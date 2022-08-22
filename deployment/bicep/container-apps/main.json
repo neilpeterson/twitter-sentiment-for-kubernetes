@@ -6,7 +6,7 @@
         "SERVICE_BUS_CONNECTION_STR": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
                 },
                 "secretName": "SERVICEBUSCONNECTIONSTR"
             }
@@ -15,7 +15,7 @@
         "SERVICE_BUS_QUEUE_NAME": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
                 },
                 "secretName": "SERVICEBUSQUEUENAME"
             }
@@ -24,7 +24,7 @@
         "TWITTER_CONSUMER_KEY": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
                 },
                 "secretName": "TWITTERCONSUMERKEY"
             }
@@ -33,7 +33,7 @@
         "TWITTER_CONSUMER_SECRET": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
                 },
                 "secretName": "TWITTERCONSUMERSECRET"
             }
@@ -42,7 +42,7 @@
         "TWITTER_ACCESS_TOKEN": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
                 },
                 "secretName": "TWITTERACCESSTOKEN"
             }
@@ -51,9 +51,45 @@
         "TWITTER_ACCESS_TOKEN_SECRET": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/tue-app-002/providers/Microsoft.KeyVault/vaults/tue-twit-002"
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
                 },
                 "secretName": "TWITTERACCESSTOKENSECRET"
+            }
+        },
+
+        "AZURE_ANALYTICS_URI": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
+                },
+                "secretName": "AZUREANALYTICSURI"
+            }
+        },
+
+        "AZURE_ANALYTICS_KEY": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
+                },
+                "secretName": "AZUREANALYTICSKEY"
+            }
+        },
+
+        "COSMOS_DB_ENDPOINT": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
+                },
+                "secretName": "COSMOSDBENDPOINT"
+            }
+        },
+
+        "COSMOS_DB_MASTERKEY": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/7dba16b0-223a-47ee-961c-35f04590c547/resourceGroups/sb-demo-6661/providers/Microsoft.KeyVault/vaults/sb-demo-6661"
+                },
+                "secretName": "COSMOSDBMASTERKEY"
             }
         }
     }

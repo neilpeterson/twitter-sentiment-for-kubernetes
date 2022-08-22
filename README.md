@@ -93,31 +93,3 @@ To stop and remove the application, run the following.
 ```
 kubectl delete -f twitter-sentiment-kubernetes-manifest.yml
 ```
-
-
---------
-
-$env:SERVICE_BUS_CONNECTION_STR = "Endpoint=sb://sblab001.servicebus.windows.net/;SharedAccessKeyName=python;SharedAccessKey=eJm71j2kVmnCWLxftgIBp6omGK0CW8iAxJcISYJif5I="
-$env:SERVICE_BUS_QUEUE_NAME = "twitter"
-
-$env:TWITTER_CONSUMER_KEY = "S1juYjQD9bH0i3dDxEOv2g7wE"
-$env:TWITTER_CONSUMER_SECRET = "HHjLe1zZz9ydAZVbYurQRv8A8w4aAZbmqQqwBHFeyoAnsp9zI4"
-$env:TWITTER_ACCESS_TOKEN = "556115100-7fhYvVvDLhwxHoj0TvgtvHBSedAvtPojsPNWnSJP"
-$env:TWITTER_ACCESS_TOKEN_SECRET = "xkouLtiC9GCV8aM0DRvKLthcy7a2f7e4JhawIbs0subA7"
-
-$env:COSMOS_DB_ENDPOINT = "https://sblab001.documents.azure.com:443/"
-$env:COSMOS_DB_MASTERKEY = "Kb6zvDcGvgOZihAE8K2prQk9Kvlip2NT5Q48uWA2sRrytUa4Z19dv369sfj6hFlG3QRftY9hS63xewRtiywSzg=="
-$env:COSMOS_DB_DATABASE = "twitter"
-$env:COSMOS_DB_COLLECTION = "twitter"
-
-$env:AZURE_ANALYTICS_URI = "https://sblab001.cognitiveservices.azure.com/"
-$env:AZURE_ANALYTICS_KEY = "67ef079539ab44d1a5fe5e3024aa2e81"
-
-$env:TWITTER_TEXT = "Microsoft"
-
-% python3 -m venv newtst
-% ./newtst/bin/Activate.ps1
-% deactivate
-
-/Users/neilpeterson/Documents/code/python-virtual-env/twitter-sentiment/bin/Activate.ps1
-deactivate

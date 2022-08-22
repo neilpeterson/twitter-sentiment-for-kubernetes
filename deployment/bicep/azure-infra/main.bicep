@@ -1,7 +1,7 @@
-param cognitiveName string = 'tue-twit-002'
-param cosmosName string = 'tue-twit-002'
-param kayVaultName string = 'tue-twit-002'
-param serviceBusName string = 'tue-twit-002'
+param cognitiveName string = resourceGroup().name
+param cosmosName string = resourceGroup().name
+param kayVaultName string = resourceGroup().name
+param serviceBusName string = resourceGroup().name
 param serviceBusQueueName string = 'twitter'
 param location string = resourceGroup().location
 
@@ -127,3 +127,53 @@ resource consumersecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = if (!em
     value: TWITTERCONSUMERSECRET
   }
 }
+
+resource azureanalyticsuri 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  parent: keyvault
+  name: 'AZUREANALYTICSURI'
+  properties: {
+    value: analytics.properties.endpoint
+  }
+}
+
+resource azureanalyticskey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  parent: keyvault
+  name: 'AZUREANALYTICSKEY'
+  properties: {
+    value: analytics.listKeys().key1
+  }
+}
+
+resource cosmosdbendpoint 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  parent: keyvault
+  name: 'COSMOSDBENDPOINT'
+  properties: {
+    value: cosmosdb.properties.documentEndpoint
+  }
+}
+
+resource cosmosdbmasterkey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  parent: keyvault
+  name: 'COSMOSDBMASTERKEY'
+  properties: {
+    value: cosmosdb.listKeys().primaryMasterKey
+  }
+}
+
+resource cosmosdbdatabase 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  parent: keyvault
+  name: 'COSMOSDBDATABASE'
+  properties: {
+    value: 'twitter'
+  }
+}
+
+resource cosmosdbcollection 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  parent: keyvault
+  name: 'COSMOSDBCOLLECTION'
+  properties: {
+    value: 'twitter'
+  }
+}
+
+
