@@ -1,8 +1,7 @@
 FROM python
 
 RUN pip install tweepy && \
-    pip install azure-storage-queue && \
-    pip install requests
+    pip install azure-servicebus
 
 ADD ./get-tweet.py /app/get-tweet.py
 

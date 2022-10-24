@@ -1,46 +1,43 @@
-from azure.storage.queue import QueueClient
 import os
 import json
-import tweepy
+from tweepy import Stream
+from azure.servicebus import ServiceBusClient, ServiceBusMessage
 
-# Azure Storage
-azure_queue = os.environ['AZURE_QUEUE']
-azure_storage_acct_connection_string = os.environ['AZURE_STORAGE_ACCT_CONNECTION_STRING']
+# Azure Service Bus connection details
+CONNECTION_STR = os.environ['SERVICE_BUS_CONNECTION_STR']
+QUEUE_NAME = os.environ["SERVICE_BUS_QUEUE_NAME"]
 
-# Twitter
+# Twitter API connection details
 twitter_consumer_key = os.environ['TWITTER_CONSUMER_KEY']
 twitter_consumer_secret = os.environ['TWITTER_CONSUMER_SECRET']
 twitter_accesss_token = os.environ['TWITTER_ACCESS_TOKEN']
 twitter_access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
 twitter_serarch_string = os.environ['TWITTER_TEXT']
 
-# Authenticate with Twitter
-auth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
-auth.set_access_token(twitter_accesss_token, twitter_access_token_secret)
-api = tweepy.API(auth)
+# Service Bus client and queue sender
+servicebus_client = ServiceBusClient.from_connection_string(conn_str=CONNECTION_STR, logging_enable=True)
+sender = servicebus_client.get_queue_sender(queue_name=QUEUE_NAME)
 
-# Build Azure queue object
-queue_service = QueueClient.from_connection_string(azure_storage_acct_connection_string, azure_queue)
+# Send message to service bus queue
+def send_single_message(sender, tweet):
+    message = ServiceBusMessage(tweet)
+    sender.send_messages(message)
 
-# Define Tweepy stream class
-class MyStreamListener(tweepy.StreamListener):
-
+# Twitter stream class
+class MyStreamListener(Stream):
     def on_status(self, status):
 
-        # Filter out re-tweet is env variable is set
-        if "FILTER_RETWEET" in os.environ:
-            if (not status.retweeted) and ('RT @' not in status.text):
-                print(status.text)
-                queue_service.send_message(status.text)
-        else:
+        if (not status.retweeted) and ('RT @ not in status.text'):
             print(status.text)
-            queue_service.send_message(status.text)
+            send_single_message(sender, status.text)
 
-    def on_error(self, status):
-        print('Error')
+    def on_error(self, status_code):
+        if status_code == 420:
+            return False
 
-# Twitter Stream
-listener = MyStreamListener()
-stream = tweepy.Stream(auth, listener)
-setTerms = [twitter_serarch_string]
-stream.filter(track = setTerms)
+stream = MyStreamListener(twitter_consumer_key,
+                          twitter_consumer_secret,
+                          twitter_accesss_token,
+                          twitter_access_token_secret)
+
+stream.filter(track=[twitter_serarch_string], languages=["en"])

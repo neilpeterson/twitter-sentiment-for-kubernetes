@@ -1,18 +1,17 @@
-from azure.storage.queue import QueueClient
-import pydocumentdb.document_client as document_client
 import os
 import json
 import requests
+import pydocumentdb.document_client as document_client
+from azure.servicebus import ServiceBusClient
 
 # Azure Analytics
 azure_analytics_uri = os.environ['AZURE_ANALYTICS_URI']
-# Why duplicated variable
 azure_analytics_uri = azure_analytics_uri + "/text/analytics/v3.0/sentiment"
 azure_analytics_key = os.environ['AZURE_ANALYTICS_KEY']
 
-# Azure Storage
-azure_storage_acct_connection_string = os.environ['AZURE_STORAGE_ACCT_CONNECTION_STRING']
-azure_queue = os.environ['AZURE_QUEUE']
+# Azure Service Bus connection details
+CONNECTION_STR = os.environ['SERVICE_BUS_CONNECTION_STR']
+QUEUE_NAME = os.environ["SERVICE_BUS_QUEUE_NAME"]
 
 # Cosmos DB
 cosmos_db_endpoint = os.environ['COSMOS_DB_ENDPOINT']
@@ -20,13 +19,8 @@ cosmos_db_masterkey = os.environ['COSMOS_DB_MASTERKEY']
 cosmos_db_database = os.environ['COSMOS_DB_DATABASE']
 cosmos_db_collection = os.environ['COSMOS_DB_COLLECTION']
 
-# Build queue object
-queue_service = QueueClient.from_connection_string(azure_storage_acct_connection_string, azure_queue)
-
 # Build Cosmos DB client
 client = document_client.DocumentClient(cosmos_db_endpoint, {'masterKey': cosmos_db_masterkey})
-
-# Start Functions
 
 # Initialize Cosmos DB
 def cosmosdb():
@@ -55,10 +49,7 @@ def cosmosdb():
     # Return collection
     return collection
 
-# Get Azure Queue count
-def queue_count():
-    messages = queue_service.receive_messages(messages_per_page=1)
-    return messages
+# Start Functions
 
 # Get sentiment
 def analytics(text):
@@ -94,29 +85,27 @@ def add_tweet_cosmosdb(messgae, sentiment):
             'sentiment': sentiment
         })
 
-# Delete Azure Queue message
-def delete_queue_message(queue, message):
-    queue_service.delete_message(message)
-
 ## Start Main
 
 # Initalize Cosmos DB
 collection = cosmosdb()
 
-while True:
+# Service Bus client and queue sender
+with ServiceBusClient.from_connection_string(conn_str=CONNECTION_STR, logging_enable=True) as sbclient:
+    with sbclient.get_queue_receiver(QUEUE_NAME) as receiver:
+        for msg in receiver:
+            
+            print(str(msg))
 
-    # Get tweets from Azure Queue
-    returned_messages = queue_count()
+            # Get sentiment
+            returned_sentiment = analytics(str(msg))
+            print(returned_sentiment)
 
-    # Loop tweets
-    for message in returned_messages:
+            # Add tweet and sentiment score to Cosmos DB
+            add_tweet_cosmosdb(str(msg), returned_sentiment)
 
-        # Get sentiment
-        returned_sentiment = analytics(message.content)
-        print(returned_sentiment)
+            # Delete message from queue
+            receiver.complete_message(msg)
 
-        # Add tweet and sentiment score to Cosmos DB
-        add_tweet_cosmosdb(message.content, returned_sentiment)
 
-        # Delete message from queue
-        delete_queue_message(azure_queue, message)
+
