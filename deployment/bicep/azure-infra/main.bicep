@@ -2,7 +2,6 @@ param cognitiveName string = resourceGroup().name
 param cosmosName string = resourceGroup().name
 param kayVaultName string = resourceGroup().name
 param serviceBusName string = resourceGroup().name
-param serviceBusQueueName string = 'twitter'
 param location string = resourceGroup().location
 
 @secure()
@@ -50,18 +49,21 @@ resource servicebus 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   }
 }
 
-resource servicebusqueue 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
-  name: serviceBusQueueName
+resource servicebusQueue 'Microsoft.ServiceBus/namespaces/queues@2022-01-01-preview' = {
+  name: 'twitter'
   parent: servicebus
+  properties: {
+    
+  }
 }
 
-resource servicebusaccess 'Microsoft.ServiceBus/namespaces/AuthorizationRules@2022-01-01-preview' = {
-  name: serviceBusQueueName
+resource servicebusQueueAccess 'Microsoft.ServiceBus/namespaces/AuthorizationRules@2022-01-01-preview' = {
+  name: 'twitter'
   parent: servicebus
   properties: {
     rights: [
-      'send'
-      'listen'
+      'Send'
+      'Listen'
     ]
   }
 }
@@ -80,19 +82,11 @@ resource keyvault 'Microsoft.KeyVault/vaults@2019-09-01' = {
   }
 }
 
-resource servicebusqueuename 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
-  parent: keyvault
-  name: 'SERVICEBUSQUEUENAME'
-  properties: {
-    value: serviceBusQueueName
-  }
-}
-
 resource servicebusconnectionstring 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   parent: keyvault
   name: 'SERVICEBUSCONNECTIONSTR'
   properties: {
-    value: servicebusaccess.listKeys().primaryConnectionString
+    value: servicebusQueueAccess.listKeys().primaryConnectionString
   }
 }
 
@@ -175,5 +169,3 @@ resource cosmosdbcollection 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
     value: 'twitter'
   }
 }
-
-

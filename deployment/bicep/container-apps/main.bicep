@@ -5,7 +5,7 @@ param location string = resourceGroup().location
 param SERVICE_BUS_CONNECTION_STR string
 
 @secure()
-param SERVICE_BUS_QUEUE_NAME string
+param SERVICE_BUS_QUEUE_NAME string = 'twitter'
 
 @secure()
 param TWITTER_CONSUMER_KEY string

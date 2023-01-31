@@ -1,0 +1,10 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: twitter-servicebus
+spec:
+  type: pubsub.azure.servicebus
+  version: v1
+  metadata:
+  - name: connectionString
+    value: "Endpoint=sb://sun-twit-001.servicebus.windows.net/;SharedAccessKeyName=tweet-body;SharedAccessKey=WiZrqGVPx5XPSE6M/tl/qAm987spllVArWeEN4Vv3EU=;EntityPath=tweet-body"

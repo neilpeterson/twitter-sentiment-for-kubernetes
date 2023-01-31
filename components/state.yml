@@ -1,0 +1,50 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: twitter-state
+spec:
+  type: state.azure.cosmosdb
+  version: v1
+  metadata:
+  - name: url
+    value: https://sun-twit-001.documents.azure.com:443/
+  - name: masterKey
+    value: RKRwyaYXPmHKaetob3pfq7X9dl6K10uEv8OxVjZoXFozRiSjB8QzdrG2tvWE1NmwFmVUWtwQfwX8ACDb5GkvSQ==
+  - name: database
+    value: twitter
+  - name: collection
+    value: twitter
+
+# apiVersion: dapr.io/v1alpha1
+# kind: Component
+# metadata:
+#   name: <NAME>
+# spec:
+#   type: state.mongodb
+#   version: v1
+#   metadata:
+#   - name: host
+#     value: "twitter-app-three.mongo.cosmos.azure.com"
+#   - name: username
+#     value: "twitter-app-three"
+#   - name: password
+#     value: "HkuwmrnDZZUhDmX6bNvOvoifvMA0hE8YjBeya0I8eLXKmTXJNzwg6nRR8P2Erpe6SSsUk1IEEuhjJunjbX3LPw==""
+#   - name: databaseName
+#     value: "twitter"
+
+# apiVersion: dapr.io/v1alpha1
+# kind: Component
+# metadata:
+#   name: twitter-state
+# spec:
+#   type: bindings.azure.cosmosdb
+#   version: v1
+#   metadata:
+#   - name: url
+#     value: https://test123niner.documents.azure.com:443/
+#   - name: masterKey
+#     value: M4babLFtlopr0n8kv7l8xLoctbVCOgmowgNrfpX3KsW5R11nx3B1See1N1jGWKkFpW9x5VtpaEh2ACDbV5ALhQ==
+#   - name: database
+#     value: twitter
+#   - name: collection
+#     value: twitter

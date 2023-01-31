@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='default.css') }}">
+    <title>"Twitter Results"</title>
+</head>
+<body>
+<embed type="image/svg+xml" src={{graph_data|safe}} width="750" height="750" />
+</body>
+</html>

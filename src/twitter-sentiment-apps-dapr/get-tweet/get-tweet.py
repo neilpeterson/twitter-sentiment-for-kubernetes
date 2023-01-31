@@ -1,11 +1,8 @@
 import os
 import json
 from tweepy import Stream
-from azure.servicebus import ServiceBusClient, ServiceBusMessage
-
-# Azure Service Bus connection details
-CONNECTION_STR = os.environ['SERVICE_BUS_CONNECTION_STR']
-QUEUE_NAME = os.environ["SERVICE_BUS_QUEUE_NAME"]
+from dapr.clients import DaprClient
+import logging
 
 # Twitter API connection details
 twitter_consumer_key = os.environ['TWITTER_CONSUMER_KEY']
@@ -14,22 +11,22 @@ twitter_accesss_token = os.environ['TWITTER_ACCESS_TOKEN']
 twitter_access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
 twitter_serarch_string = os.environ['TWITTER_TEXT']
 
-# Service Bus client and queue sender
-servicebus_client = ServiceBusClient.from_connection_string(conn_str=CONNECTION_STR, logging_enable=True)
-sender = servicebus_client.get_queue_sender(queue_name=QUEUE_NAME)
-
-# Send message to service bus queue
-def send_single_message(sender, tweet):
-    message = ServiceBusMessage(tweet)
-    sender.send_messages(message)
-
 # Twitter stream class
 class MyStreamListener(Stream):
     def on_status(self, status):
 
-        if (not status.retweeted) and ('RT @ not in status.text'):
-            print(status.text)
-            send_single_message(sender, status.text)
+        if (not status.retweeted) and ('RT @' not in status.text):            
+            print(status.text, flush=True)
+
+            # post = {'tweet': status.text}
+
+            # with DaprClient() as client:
+            #     result = client.publish_event(
+            #         pubsub_name='twitter-servicebus',
+            #         topic_name='tweet-body',
+            #         data=json.dumps(post),
+            #         data_content_type='application/json',
+            #     )
 
     def on_error(self, status_code):
         if status_code == 420:
