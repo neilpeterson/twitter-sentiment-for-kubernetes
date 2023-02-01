@@ -35,13 +35,13 @@ def index():
     mixed = 0
 
     for doc in docs:
-        if doc["value"]["tweets"]["sentiment"] == 'positive':
+        if doc["sentiment"] == 'positive':
             positive += 1
-        elif (doc["value"]["tweets"]["sentiment"] == 'neutral'):
+        elif doc["sentiment"] == 'neutral':
             neutral += 1
-        elif doc["value"]["tweets"]["sentiment"] == 'negative':
+        elif doc["sentiment"] == 'negative':
             negative +=1
-        elif doc["value"]["tweets"]["sentiment"] == 'mixed':
+        elif doc["sentiment"] ==  'mixed':
             mixed +=1
 
     pie_chart = pygal.Pie(style=BlueStyle, print_values=True)

@@ -2,7 +2,17 @@
 
 Collects tweets, gets sentiments of tweets, stores, and visualizes results.
 
-![application architecture](/images/app.png)
+#### Get Tweets
+
+![application architecture](./docs/images/get-tweet.png)
+
+#### Process Tweets
+
+![application architecture](./docs/images/process-tweet.png)
+
+#### Chart Tweets
+
+![application architecture](./docs/images/chart-tweets.png)
 
 ## Prerequisites
 
