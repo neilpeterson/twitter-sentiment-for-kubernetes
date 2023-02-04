@@ -1,10 +1,23 @@
+# apiVersion: dapr.io/v1alpha1
+# kind: Component
+# metadata:
+#   name: twitter-servicebus
+# spec:
+#   type: pubsub.azure.servicebus
+#   version: v1
+#   metadata:
+#   - name: connectionString
+#     value: "Endpoint=sb://bbffggrr.servicebus.windows.net/;SharedAccessKeyName=twitter;SharedAccessKey=svkLI5lg5cuBwVJInM3TZl9yc6pfQCEAJ7B0VM8n++w=;EntityPath=tweet-body"
+
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: twitter-servicebus
 spec:
-  type: pubsub.azure.servicebus
+  type: bindings.azure.servicebusqueues
   version: v1
   metadata:
-  - name: connectionString
-    value: "Endpoint=sb://sun-twit-001.servicebus.windows.net/;SharedAccessKeyName=tweet-body;SharedAccessKey=WiZrqGVPx5XPSE6M/tl/qAm987spllVArWeEN4Vv3EU=;EntityPath=tweet-body"
+  - name: connectionString # Required when not using Azure Authentication.
+    value: "Endpoint=sb://bbffggrr.servicebus.windows.net/;SharedAccessKeyName=twitter;SharedAccessKey=Rp0DNejCViN0yM0brZfV5jsaiCSqkbMXfpJKNgXTewg=;EntityPath=twitter"
+  - name: queueName
+    value: twitter

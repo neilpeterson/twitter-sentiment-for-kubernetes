@@ -18,15 +18,15 @@ class MyStreamListener(Stream):
         if (not status.retweeted) and ('RT @' not in status.text):            
             print(status.text, flush=True)
 
-            # post = {'tweet': status.text}
+            post = {'tweet': status.text}
 
-            # with DaprClient() as client:
-            #     result = client.publish_event(
-            #         pubsub_name='twitter-servicebus',
-            #         topic_name='tweet-body',
-            #         data=json.dumps(post),
-            #         data_content_type='application/json',
-            #     )
+            with DaprClient() as client:
+                result = client.publish_event(
+                    pubsub_name='twitter-servicebus',
+                    topic_name='tweet-body',
+                    data=json.dumps(post),
+                    data_content_type='application/json',
+                )
 
     def on_error(self, status_code):
         if status_code == 420:
