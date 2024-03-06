@@ -1,0 +1,10 @@
+{
+    "tweets": [
+        {
+            "text": "This is tweet one."
+        },
+        {
+            "text": "This is tweet two."
+        }
+    ]
+}

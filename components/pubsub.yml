@@ -17,7 +17,23 @@ spec:
   type: bindings.azure.servicebusqueues
   version: v1
   metadata:
-  - name: connectionString # Required when not using Azure Authentication.
-    value: "Endpoint=sb://bbffggrr.servicebus.windows.net/;SharedAccessKeyName=twitter;SharedAccessKey=Rp0DNejCViN0yM0brZfV5jsaiCSqkbMXfpJKNgXTewg=;EntityPath=twitter"
+  - name: connectionString
+    value: "Endpoint=sb://bbffggrr.servicebus.windows.net/;SharedAccessKeyName=twitter;SharedAccessKey=a+ferZOtnG9qcQ5SOQYWwblf4w6dV3MeMRyKXFtgY6I=;EntityPath=twitter"
   - name: queueName
     value: twitter
+  # - name: ttlInSeconds # Optional
+  #   value: 86400
+  - name: maxRetriableErrorsPerSec # Optional
+    value: 100
+  - name: minConnectionRecoveryInSec # Optional
+    value: 200
+  - name: maxConnectionRecoveryInSec # Optional
+    value: 3000
+  # - name: maxActiveMessages # Optional
+  #   value: 1
+  # - name: maxConcurrentHandlers # Optional
+  #   value: 1
+  - name: lockRenewalInSec # Optional
+    value: 200
+  - name: timeoutInSec # Optional
+    value: 600

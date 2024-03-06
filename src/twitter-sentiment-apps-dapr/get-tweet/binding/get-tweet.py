@@ -11,6 +11,8 @@ twitter_accesss_token = os.environ['TWITTER_ACCESS_TOKEN']
 twitter_access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
 twitter_serarch_string = os.environ['TWITTER_TEXT']
 
+logging.basicConfig(level = logging.INFO)
+
 # Twitter stream class
 class MyStreamListener(Stream):
     def on_status(self, status):
@@ -21,16 +23,15 @@ class MyStreamListener(Stream):
             post = {'tweet': status.text}
 
             with DaprClient() as client:
-                result = client.publish_event(
-                    pubsub_name='twitter-servicebus',
-                    topic_name='tweet-body',
-                    data=json.dumps(post),
-                    data_content_type='application/json',
-                )
+                result = client.invoke_binding('twitter-servicebus', 'create', json.dumps(post))
+                # logging.basicConfig(level = logging.INFO)
+                # logging.info('Sending message: ' + '123')
 
-    def on_error(self, status_code):
-        if status_code == 420:
-            return False
+                print(result)   
+
+    # def on_error(self, status_code):
+    #     if status_code == 420:
+    #         return False
 
 stream = MyStreamListener(twitter_consumer_key,
                           twitter_consumer_secret,

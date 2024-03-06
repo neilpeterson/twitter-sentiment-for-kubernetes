@@ -56,7 +56,7 @@ Update later
 ## Run Get Tweets Application with Dapr
 
 ```
-dapr run --app-id tweet-sentiment --components-path ./components/ --app-port 5001 -- python3 ./src/twitter-sentiment-apps-dapr/get-tweet/get-tweet.py
+dapr run --app-id tweet-sentiment --components-path ./components/ --app-port 5001 -- python3 ./src/twitter-sentiment-apps-dapr/get-tweet/binding/get-tweet.py
 ```
 
 ```
@@ -68,7 +68,7 @@ dapr run --app-id tweet-sentiment --components-path ./components/ --app-port 500
 ## Run Process Tweets Application
 
 ```
-python ./src/twitter-sentiment-apps/process-tweet/process-tweet.py
+dapr run --app-id receiver --app-protocol grpc --app-port 3000 --components-path ./components/ -- python3 ./src/twitter-sentiment-apps-dapr/process-tweet/process-tweet-binding.py
 ```
 
 ```

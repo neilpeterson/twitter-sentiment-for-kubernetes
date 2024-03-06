@@ -21,13 +21,13 @@ $env:TWITTER_CONSUMER_KEY = ""
 $env:TWITTER_CONSUMER_SECRET = ""
 $env:TWITTER_ACCESS_TOKEN = ""
 $env:TWITTER_ACCESS_TOKEN_SECRET = ""
-$env:AZURE_ANALYTICS_URI = ""
-$env:AZURE_ANALYTICS_KEY = ""
-$env:COSMOS_DB_ENDPOINT = ""
-$env:COSMOS_DB_MASTERKEY = ""
+$env:AZURE_ANALYTICS_URI = "https://eastus.api.cognitive.microsoft.com/"
+$env:AZURE_ANALYTICS_KEY = "0078f8558349412081bd0a18983ee4e4"
+$env:COSMOS_DB_ENDPOINT = "https://twitter-paris-001.documents.azure.com:443/"
+$env:COSMOS_DB_MASTERKEY = "5YZgTVOOTW0CBjk4newSTPWwMrJRSqzFMl5YzmuUohzxdhKF3bgrUQdylGyGcvEk3VkETNooD14mACDbITO1gA=="
 $env:COSMOS_DB_DATABASE = "twitter"
 $env:COSMOS_DB_COLLECTION = "twitter"
-$env:SERVICE_BUS_CONNECTION_STR = ""
+$env:SERVICE_BUS_CONNECTION_STR = "Endpoint=sb://twitter-paris-001.servicebus.windows.net/;SharedAccessKeyName=twitter;SharedAccessKey=7BWoI/2d6axZIhNAGuphCQFAi5H+xv+JG+ASbC9EzNg="
 $env:SERVICE_BUS_QUEUE_NAME = "twitter"
 $env:TWITTER_TEXT = "Seattle"
 ```
@@ -35,7 +35,7 @@ $env:TWITTER_TEXT = "Seattle"
 Activate a Python virtual environment
 
 ```
-/Users/neilpeterson/Documents/code/python-virtual-env/twitter-sentiment/bin/Activate.ps1
+/Users/neilpeterson/Documents/code/python-virtual-env/.venv/bin/Activate.ps1
 ```
 
 Install pacakages if necisary.
@@ -46,8 +46,15 @@ Update later
 
 ## Run Get Tweets Application
 
+Note, the Twitter streaming API is no longer free so a MOC Tweet gen tool is being used.
+
 ```
+# Skip this due to API no longer free
 python ./src/twitter-sentiment-apps/get-tweet/get-tweet.py
+```
+
+```
+python ./src/twitter-sentiment-apps/moc-get-tweet/moc-get-tweet.py
 ```
 
 ```
